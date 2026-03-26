@@ -1,6 +1,7 @@
 from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
 from models.request_models import ChatRequest, FeedbackRequest, DailyCheckinRequest
-from services.chat_service import process_chat
+from services.chat_service import process_chat_stream
 from db.chat_repository import save_feedback, save_daily_checkin
 
 router = APIRouter()
@@ -8,7 +9,7 @@ router = APIRouter()
 
 @router.post("/chat")
 def chat(request: ChatRequest):
-    return process_chat(request.message, request.user_id)
+    return StreamingResponse(process_chat_stream(request.message, request.user_id), media_type="text/event-stream")
 
 @router.post("/chat/feedback/{chat_id}")
 def feedback(chat_id: int, request: FeedbackRequest):

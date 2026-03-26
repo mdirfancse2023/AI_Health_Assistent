@@ -3,7 +3,9 @@ import requests
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-def generate_llm_response(prompt: str, emotion: str = ""):
+import json
+
+def generate_llm_stream(prompt: str, emotion: str = ""):
     url = "https://openrouter.ai/api/v1/chat/completions"
 
     headers = {
@@ -13,6 +15,7 @@ def generate_llm_response(prompt: str, emotion: str = ""):
 
     data = {
         "model": "openai/gpt-3.5-turbo",
+        "stream": True,
         "messages": [
             {
                 "role": "user",
@@ -22,18 +25,30 @@ def generate_llm_response(prompt: str, emotion: str = ""):
     }
 
     try:
-        response = requests.post(url, headers=headers, json=data)
-
-        print("STATUS:", response.status_code)
-        print("RAW RESPONSE:", response.text)
+        response = requests.post(url, headers=headers, json=data, stream=True)
 
         if response.status_code != 200:
-            return "I'm here for you. Please tell me more."
+            print("STATUS:", response.status_code, response.text)
+            yield "I'm here for you. Please tell me more."
+            return
 
-        result = response.json()
-
-        return result["choices"][0]["message"]["content"]
+        for line in response.iter_lines():
+            if line:
+                decoded_line = line.decode('utf-8')
+                if decoded_line.startswith("data: "):
+                    json_str = decoded_line[6:]
+                    if json_str.strip() == "[DONE]":
+                        break
+                    try:
+                        chunk_data = json.loads(json_str)
+                        if "choices" in chunk_data and len(chunk_data["choices"]) > 0:
+                            delta = chunk_data["choices"][0].get("delta", {})
+                            if "content" in delta:
+                                yield delta["content"]
+                    except Exception as e:
+                        print("Stream parse err:", e)
+                        pass
 
     except Exception as e:
         print("LLM ERROR:", e)
-        return "I'm here for you. Please tell me more."
+        yield "I'm here for you. Please tell me more."

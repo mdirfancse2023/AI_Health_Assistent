@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../core/services/chat.service';
 
+declare var marked: any;
+
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -22,7 +24,7 @@ export class ChatComponent {
 
   constructor(private chatService: ChatService) {}
 
-  sendMessage() {
+  async sendMessage() {
     if (!this.inputMessage.trim()) return;
 
     const userMessage = this.inputMessage;
@@ -33,36 +35,45 @@ export class ChatComponent {
     ]);
     this.inputMessage = '';
 
-    // Typiny indicator
+    // Typing indicator logic
     this.messages.set([
       ...this.messages(),
-      { sender: 'bot', text: 'Typing...', id: null, rated: false }
+      { sender: 'bot', text: '<i>Thinking...</i>', rawText: '', id: null, rated: false }
     ]);
 
     const typingIndex = this.messages().length - 1;
 
-    this.chatService.sendMessage(userMessage).subscribe({
-      next: (res: any) => {
+    try {
+      const stream = this.chatService.sendMessageStream(userMessage);
+      
+      let isFirstChunk = true;
+
+      for await (const data of stream) {
         const updated = [...this.messages()];
-        updated[typingIndex] = {
-          sender: 'bot',
-          text: res.response,
-          id: res.chat_id,         // Store chat_id for feedback
-          rated: false
-        };
-        this.messages.set(updated);
-      },
-      error: () => {
-        const updated = [...this.messages()];
-        updated[typingIndex] = {
-          sender: 'bot',
-          text: 'Error connecting to server',
-          id: null,
-          rated: false
-        };
+        const botMsg = updated[typingIndex];
+
+        if (isFirstChunk && data.chunk !== undefined) {
+           botMsg.text = ''; // Clear indicator
+           isFirstChunk = false;
+        }
+
+        if (data.chunk !== undefined) {
+           botMsg.rawText += data.chunk;
+           // Dynamically compile Raw Markdown -> Safe HTML iteratively
+           botMsg.text = marked.parse(botMsg.rawText);
+        } else if (data.chat_id !== undefined) {
+           // Database Hook successfully completed in background
+           botMsg.id = data.chat_id;
+        }
+        
         this.messages.set(updated);
       }
-    });
+    } catch (e) {
+        console.error("Stream failed:", e);
+        const updated = [...this.messages()];
+        updated[typingIndex].text = '<span style="color: red">Error connecting to server stream.</span>';
+        this.messages.set(updated);
+    }
   }
 
   rateResponse(msg: any, score: number) {
