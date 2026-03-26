@@ -1,32 +1,94 @@
-<div class="chat-container">
-
-  <div class="chat-header">
-    🧠 AI Mental Health Assistant
-  </div>
-
-  <div class="chat-box">
-
-    <div *ngFor="let msg of messages(); trackBy: trackByFn">
-
-      <div *ngIf="msg.sender === 'user'" class="user-msg">
-        {{ msg.text }}
+<div class="chat-wrapper">
+  
+  <div class="chat-container glass-panel">
+    
+    <div class="chat-header">
+      <div class="header-title">
+        <span class="avatar">🧠</span>
+        <div class="title-text">
+          <h3>AI Mental Health Assistant</h3>
+          <span class="status">Online</span>
+        </div>
       </div>
-
-      <div *ngIf="msg.sender === 'bot'" class="bot-msg">
-        {{ msg.text }}
-      </div>
-
+      <button class="checkin-btn" (click)="showCheckinModal = true">
+        📝 Daily Check-in
+      </button>
     </div>
 
+    <div class="chat-box">
+      <!-- Welcome message -->
+      <div class="message-wrapper bot">
+        <div class="message-bubble bot-msg">
+          Hello! I'm here to support your mental well-being. How are you feeling today?
+        </div>
+      </div>
+
+      <ng-container *ngFor="let msg of messages()">
+        <div class="message-wrapper" [class.user]="msg.sender === 'user'" [class.bot]="msg.sender === 'bot'">
+          <div class="message-bubble" [class.user-msg]="msg.sender === 'user'" [class.bot-msg]="msg.sender === 'bot'">
+            <div class="message-content" [innerHTML]="msg.text"></div>
+            
+            <!-- Feedback actions for bot messages -->
+            <div class="feedback-actions" *ngIf="msg.sender === 'bot' && msg.id && msg.text !== 'Typing...'">
+              <span class="feedback-prompt" *ngIf="!msg.rated">Helpful?</span>
+              <span class="feedback-prompt rated" *ngIf="msg.rated">Thank you for your feedback!</span>
+              <div class="feedback-buttons" *ngIf="!msg.rated">
+                <button (click)="rateResponse(msg, 5)" title="Helpful">👍</button>
+                <button (click)="rateResponse(msg, 1)" title="Not helpful">👎</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="input-container">
+        <input 
+          [(ngModel)]="inputMessage"
+          (keyup.enter)="sendMessage()"
+          placeholder="Share what's on your mind..." 
+          autocomplete="off"
+        />
+        <button class="send-btn" (click)="sendMessage()" [disabled]="!inputMessage.trim()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div class="chat-input">
-    <input 
-      [(ngModel)]="inputMessage"
-      (keyup.enter)="sendMessage()"
-      placeholder="Type your message..." 
-    />
-    <button (click)="sendMessage()">Send</button>
+  <!-- Daily Check-in Modal -->
+  <div class="modal-overlay" *ngIf="showCheckinModal">
+    <div class="modal-content glass-panel">
+      <h3>📝 Daily Check-in</h3>
+      <p class="modal-desc">Take a moment to reflect on your well-being.</p>
+      
+      <div class="slider-group">
+        <label>Stress Level (1-10)</label>
+        <div class="slider-container">
+          <span>Low</span>
+          <input type="range" min="1" max="10" [(ngModel)]="stressLevel">
+          <span>High</span>
+        </div>
+        <div class="value-display">{{ stressLevel }}</div>
+      </div>
+
+      <div class="slider-group">
+        <label>Academic Focus (1-10)</label>
+        <div class="slider-container">
+          <span>Low</span>
+          <input type="range" min="1" max="10" [(ngModel)]="academicFocus">
+          <span>High</span>
+        </div>
+        <div class="value-display">{{ academicFocus }}</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="showCheckinModal = false">Cancel</button>
+        <button class="btn-primary" (click)="submitCheckin()">Save Check-in</button>
+      </div>
+    </div>
   </div>
 
 </div>

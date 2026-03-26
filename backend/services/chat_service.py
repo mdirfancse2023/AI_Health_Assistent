@@ -39,9 +39,10 @@ Give a supportive, empathetic, and helpful response.
     response = generate_llm_response(prompt, emotion)
 
     # 💾 Save chat
-    save_chat(user_id, message, emotion, response)
+    chat_id = save_chat(user_id, message, emotion, response)
 
     return {
+        "chat_id": chat_id,
         "emotion": emotion,
         "response": response
     }

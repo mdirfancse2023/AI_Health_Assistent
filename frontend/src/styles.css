@@ -1,1 +1,75 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* LIGHT MODE (Default) */
+  --bg-color: #f0f4f8;
+  --text-main: #1a202c;
+  --text-muted: #4a5568;
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --bubble-user: #4f46e5;
+  --text-user: #ffffff;
+  --bubble-ai: #ffffff;
+  --text-ai: #1a202c;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --border-color: #e2e8f0;
+}
+
+[data-theme='dark'] {
+  /* DARK MODE */
+  --bg-color: #0f172a;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --primary-color: #6366f1;
+  --primary-hover: #818cf8;
+  --bubble-user: #6366f1;
+  --text-user: #ffffff;
+  --bubble-ai: rgba(30, 41, 59, 0.8);
+  --text-ai: #f8fafc;
+  --glass-bg: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --input-bg: rgba(30, 41, 59, 0.9);
+  --border-color: #334155;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent 40%),
+                    radial-gradient(circle at bottom left, rgba(236, 72, 153, 0.05), transparent 40%);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+input, textarea {
+  font-family: 'Inter', sans-serif;
+  background: var(--input-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+  outline: none;
+}
+input:focus, textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
