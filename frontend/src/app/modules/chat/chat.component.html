@@ -1,0 +1,28 @@
+<div class="chat-container">
+
+  <div class="chat-header">
+    🧠 AI Mental Health Assistant
+  </div>
+
+  <div class="chat-box">
+
+    <div *ngFor="let msg of messages; trackBy: trackByFn">
+
+      <div *ngIf="msg.sender === 'user'" class="user-msg">
+        {{ msg.text }}
+      </div>
+
+      <div *ngIf="msg.sender === 'bot'" class="bot-msg">
+        {{ msg.text }}
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="chat-input">
+    <input [(ngModel)]="inputMessage" placeholder="Type your message..." />
+    <button (click)="sendMessage()">Send</button>
+  </div>
+
+</div>
