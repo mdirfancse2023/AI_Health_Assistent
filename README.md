@@ -1,21 +1,21 @@
-# 🧠 AI-Powered Mental Health Assistant
+# 🧠 AI-Powered Mental Health Assistent
 
-An intelligent, AI-driven mental health assistant designed to support students by providing emotional insights, personalized responses, and analytics-based mental health tracking.
+An intelligent, AI-driven mental health assistant designed to support students by providing emotional insights, personalized responses, and analytics-based mental health tracking. Built as a Capstone/MBA Data Science project demonstrating end-to-end Machine Learning, NLP, and Full-Stack capability.
 
 ---
 
 ## 🚀 Project Overview
 
-This project aims to leverage Artificial Intelligence and Data Science to assist students in managing their mental well-being. The system analyzes user inputs, detects emotional states, and provides empathetic responses using Large Language Models (LLMs).
+This project aims to leverage Artificial Intelligence and Data Science to assist students in managing their mental well-being. The system analyzes user inputs, detects emotional states, and provides empathetic responses using Large Language Models (LLMs) via OpenRouter.
 
-In addition, the system tracks user interactions and visualizes emotional trends through a dashboard, enabling better awareness and decision-making.
+In addition, the system tracks user interactions and visualizes emotional trends through a dashboard, enabling better awareness and decision-making. 
 
 ---
 
 ## 🎯 Objectives
 
 * Develop an AI-based chatbot for mental health support
-* Implement emotion detection using machine learning techniques
+* Implement emotion detection using machine learning techniques (Hugging Face)
 * Provide personalized responses using LLMs
 * Track and analyze user emotional patterns
 * Visualize insights through an interactive dashboard
@@ -26,11 +26,14 @@ In addition, the system tracks user interactions and visualizes emotional trends
 ## 🏗️ System Architecture
 
 ```
-Frontend (Angular)
+Frontend (Angular 21 + Glassmorphism UI)
         ↓
 Backend (FastAPI)
         ↓
-ML Layer (Emotion Detection + LLM)
+ML Layer:
+ ├── Emotion Detection: Hugging Face (distilbert-base-uncased-emotion)
+ ├── RAG Vector Search: Hugging Face (all-MiniLM-L6-v2) + PyTorch
+ └── LLM Generation: OpenRouter API (openai/gpt-3.5-turbo)
         ↓
 Database (PostgreSQL)
 ```
@@ -42,31 +45,38 @@ Database (PostgreSQL)
 ### 💬 AI Chatbot
 
 * Real-time conversation with users
-* Emotion-aware responses
-* Integrated with LLM (via OpenRouter API)
+* Emotion-aware responses 
+* Integrated with LLM (via OpenRouter API - utilizing openai/gpt-3.5-turbo model)
 
 ### 🧠 Emotion Detection
 
-* Detects emotions like stress, sadness, neutral
-* Enhances response personalization
+* Detects emotions like stress, sadness, neutral using local NLP models.
+* Enhances response personalization dynamically.
+
+### 📚 Retrieval-Augmented Generation (RAG)
+* Built a custom, zero-dependency Vector Engine using PyTorch.
+* Computes dense 384-dimensional tensor embeddings locally for over 130+ academic coping mechanisms.
+* Utilizes Cosine Similarity to fetch empirical coping strategies based on query meaning.
 
 ### 📊 Dashboard Analytics
 
 * Emotion distribution (Pie Chart)
 * Chat activity trend (Line Chart)
-* Visual insights for mental health tracking
+* Evaluates AI Effectiveness via user feedback tracking.
+* Visual insights for Mental Health tracking (Stress vs. Academic Focus)
 
 ### 🗂️ Data Storage
 
 * Stores chat history
-* Tracks user interactions
+* Tracks user longitudinal interactions
 * Enables future personalization
 
 ### 🎨 Modern UI
 
-* Responsive Angular frontend
+* Responsive Angular frontend built with Glassmorphism 
+* Fully functional Dark Mode/Light Mode toggle
 * Clean navigation (Chat + Dashboard)
-* Styled components with professional layout
+* Styled components with professional layout and structured ChatGPT-style markdown rendering.
 
 ---
 
@@ -86,9 +96,9 @@ Database (PostgreSQL)
 
 ### 🔹 AI / ML
 
-* Transformers
-* Torch
-* OpenRouter API (LLM integration)
+* Transformers (Hugging Face Models)
+* Torch (PyTorch Cosine Similarity)
+* OpenRouter API (LLM integration: openai/gpt-3.5-turbo)
 
 ### 🔹 Database
 
@@ -114,6 +124,7 @@ cd backend
 python3 -m venv venv
 source venv/bin/activate   # Mac/Linux
 pip install -r requirements.txt
+python3 -m pip install markdown
 ```
 
 Create `.env` file:
@@ -179,6 +190,8 @@ Response:
 ```
 GET /analytics/emotions
 GET /analytics/trend
+GET /analytics/effectiveness
+GET /analytics/stress_academic
 ```
 
 ---
@@ -187,7 +200,7 @@ GET /analytics/trend
 
 * Emotion distribution across user conversations
 * Daily chat trends
-* Behavioral patterns
+* Behavioral patterns 
 
 ---
 
@@ -213,7 +226,6 @@ GET /analytics/trend
 * Advanced emotion detection models
 * Recommendation engine (coping strategies)
 * PDF report generation
-* Dark mode UI
 * Mobile responsiveness
 
 ---
@@ -231,7 +243,7 @@ This project demonstrates:
 
 ## 📌 Conclusion
 
-The AI-Powered Mental Health Assistant provides a scalable, intelligent solution for student well-being by combining AI, analytics, and user-centric design.
+The AI-Powered Mental Health Assistent provides a scalable, intelligent solution for student well-being by combining AI, analytics, and user-centric design.
 
 ---
 
