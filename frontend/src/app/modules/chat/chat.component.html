@@ -6,7 +6,7 @@
 
   <div class="chat-box">
 
-    <div *ngFor="let msg of messages; trackBy: trackByFn">
+    <div *ngFor="let msg of messages(); trackBy: trackByFn">
 
       <div *ngIf="msg.sender === 'user'" class="user-msg">
         {{ msg.text }}
