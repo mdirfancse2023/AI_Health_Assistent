@@ -13,6 +13,8 @@ print("ENV LOADED:", os.getenv("DATABASE_URL"))
 from routes.chat_routes import router as chat_router
 from db.database import Base, engine
 
+from routes.analytics_routes import router as analytics_router
+
 app = FastAPI(title="AI Mental Health Assistant")
 
 app.add_middleware(
@@ -26,6 +28,8 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 app.include_router(chat_router)
+
+app.include_router(analytics_router)
 
 @app.get("/")
 def home():
