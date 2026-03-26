@@ -1,3 +1,84 @@
+# =========================
+# 🔐 ENV FILES
+# =========================
 .env
+.env.*
+*.env
+
+# =========================
+# 🐍 PYTHON (BACKEND)
+# =========================
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python build
+build/
+dist/
+*.egg-info/
+
+# =========================
+# 🧠 FASTAPI / UVICORN
+# =========================
+*.log
+
+# =========================
+# 🐳 DOCKER
+# =========================
+*.dockerignore
+
+# =========================
+# 🗄️ DATABASE FILES
+# =========================
+*.db
+*.sqlite3
+
+# =========================
+# 🌐 ANGULAR (FRONTEND)
+# =========================
+node_modules/
+dist/
+.angular/
+.angular/cache/
+
+# Angular environment files
+src/environments/*.ts
+
+# Angular logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# 💻 IDE / EDITOR
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# =========================
+# 🔧 SYSTEM FILES
+# =========================
+Thumbs.db
+
+# =========================
+# 📦 PACKAGE LOCK (optional)
+# =========================
+# Uncomment if needed
+# package-lock.json
+
+# =========================
+# 📂 MISC
+# =========================
+coverage/
+.cache/
