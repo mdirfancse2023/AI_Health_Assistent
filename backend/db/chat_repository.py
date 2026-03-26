@@ -1,20 +1,10 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
-from datetime import datetime
-from db.database import Base, SessionLocal
+from db.database import SessionLocal
+from models.chat_model import ChatLog
 
-class Chat(Base):
-    __tablename__ = "chat_logs"
-
-    id = Column(Integer, primary_key=True, index=True)
-    message = Column(Text)
-    emotion = Column(String(50))
-    response = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow)
-
-
-def save_chat(message: str, emotion: str, response: str):
+def save_chat(user_id, message, emotion, response):
     db = SessionLocal()
-    chat = Chat(
+    chat = ChatLog(
+        user_id=user_id,
         message=message,
         emotion=emotion,
         response=response
@@ -24,8 +14,28 @@ def save_chat(message: str, emotion: str, response: str):
     db.close()
 
 
-def get_all_chats():
+def get_recent_chats(user_id, limit=5):
     db = SessionLocal()
-    chats = db.query(Chat).all()
+    chats = db.query(ChatLog)\
+        .filter(ChatLog.user_id == user_id)\
+        .order_by(ChatLog.created_at.desc())\
+        .limit(limit)\
+        .all()
     db.close()
     return chats
+
+
+def get_emotion_summary(user_id):
+    db = SessionLocal()
+    chats = db.query(ChatLog)\
+        .filter(ChatLog.user_id == user_id)\
+        .all()
+
+    emotion_count = {}
+
+    for chat in chats:
+        emotion = chat.emotion
+        emotion_count[emotion] = emotion_count.get(emotion, 0) + 1
+
+    db.close()
+    return emotion_count

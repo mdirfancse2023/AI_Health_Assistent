@@ -3,7 +3,7 @@ import requests
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-def generate_llm_response(message: str, emotion: str) -> str:
+def generate_llm_response(prompt: str, emotion: str = ""):
     url = "https://openrouter.ai/api/v1/chat/completions"
 
     headers = {
@@ -11,19 +11,13 @@ def generate_llm_response(message: str, emotion: str) -> str:
         "Content-Type": "application/json"
     }
 
-    prompt = f"""
-You are a mental health assistant helping students.
-
-Emotion: {emotion}
-User: {message}
-
-Respond in a supportive, short, and empathetic way.
-"""
-
     data = {
-        "model": "openai/gpt-3.5-turbo",   # 🔥 safer model
+        "model": "openai/gpt-3.5-turbo",
         "messages": [
-            {"role": "user", "content": prompt}
+            {
+                "role": "user",
+                "content": prompt   # 🔥 FULL CONTEXT PROMPT
+            }
         ]
     }
 
@@ -38,11 +32,7 @@ Respond in a supportive, short, and empathetic way.
 
         result = response.json()
 
-        # Safe extraction
-        if "choices" in result:
-            return result["choices"][0]["message"]["content"]
-
-        return "I'm here for you. Please tell me more."
+        return result["choices"][0]["message"]["content"]
 
     except Exception as e:
         print("LLM ERROR:", e)

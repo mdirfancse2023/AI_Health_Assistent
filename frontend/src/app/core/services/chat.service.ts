@@ -11,10 +11,10 @@ export class ChatService {
   private apiUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient) {}
-
-  sendMessage(message: string): Observable<any> {
+  sendMessage(message: string) {
     return this.http.post(`${this.apiUrl}/chat`, {
-      message: message
+      message: message,
+      user_id: "student_1"   // 🔥 simulate user
     });
   }
 }

@@ -1,10 +1,14 @@
 from fastapi import APIRouter
-from models.request_models import ChatRequest
+from pydantic import BaseModel
 from services.chat_service import process_chat
 
 router = APIRouter()
 
+class ChatRequest(BaseModel):
+    message: str
+    user_id: str = "default_user"   # 🔥 NEW
+
+
 @router.post("/chat")
-async def chat(req: ChatRequest):
-    result = process_chat(req.message)
-    return result
+def chat(request: ChatRequest):
+    return process_chat(request.message, request.user_id)
