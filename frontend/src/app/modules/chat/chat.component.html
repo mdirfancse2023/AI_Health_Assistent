@@ -21,7 +21,11 @@
   </div>
 
   <div class="chat-input">
-    <input [(ngModel)]="inputMessage" placeholder="Type your message..." />
+    <input 
+      [(ngModel)]="inputMessage"
+      (keyup.enter)="sendMessage()"
+      placeholder="Type your message..." 
+    />
     <button (click)="sendMessage()">Send</button>
   </div>
 

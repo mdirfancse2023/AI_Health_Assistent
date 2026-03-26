@@ -1,0 +1,41 @@
+.navbar {
+  padding: 8px 0;
+  background: transparent;
+  margin-top: 10px;
+}
+
+.nav-content {
+  max-width: 850px;
+  margin: auto;
+  background: #4CAF50;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.nav-content h2 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.nav-links a {
+  margin-left: 12px;
+  font-size: 13px;
+  color: white;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+.nav-links a:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.active {
+  background: rgba(255,255,255,0.35);
+}
