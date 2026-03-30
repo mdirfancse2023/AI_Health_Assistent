@@ -2,6 +2,9 @@
   padding: 0 24px 40px 24px;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .header-section {
@@ -32,6 +35,7 @@
   margin-bottom: 24px;
   display: flex;
   justify-content: flex-start;
+  overflow-x: visible;
 }
 
 .kpi-card {
@@ -114,14 +118,16 @@
   }
 
   .kpi-banner {
-    justify-content: center;
-    overflow-x: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
     padding-bottom: 8px;
   }
 
   .kpi-card {
-    min-width: 250px;
-    padding: 16px 20px;
+    min-width: auto;
+    width: 100%;
+    padding: 14px 16px;
   }
 
   .kpi-icon {
@@ -167,13 +173,17 @@
   }
 
   .kpi-banner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
     margin-bottom: 16px;
   }
 
   .kpi-card {
-    min-width: 220px;
-    padding: 14px 16px;
-    gap: 12px;
+    min-width: auto;
+    width: 100%;
+    padding: 12px 14px;
+    gap: 10px;
   }
 
   .kpi-icon {

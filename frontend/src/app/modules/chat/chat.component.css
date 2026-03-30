@@ -4,6 +4,9 @@
   align-items: center;
   height: calc(100vh - 120px);
   padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .chat-container {
@@ -101,13 +104,17 @@
 /* Mobile Chat Responsive Styles */
 @media (max-width: 768px) {
   .chat-wrapper {
-    height: calc(100vh - 100px);
+    height: auto;
+    min-height: calc(100vh - 100px);
     padding: 12px;
   }
 
   .chat-container {
+    width: 100%;
     max-width: 100%;
-    max-height: 100%;
+    height: auto;
+    min-height: 500px;
+    max-height: none;
     border-radius: 16px;
   }
 
@@ -147,11 +154,15 @@
     height: auto;
     min-height: calc(100vh - 80px);
     padding: 8px;
+    width: 100%;
   }
 
   .chat-container {
-    max-height: none;
+    width: 100%;
+    max-width: 100%;
     height: auto;
+    min-height: 400px;
+    max-height: none;
     border-radius: 12px;
   }
 
