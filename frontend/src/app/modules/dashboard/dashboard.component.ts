@@ -18,6 +18,7 @@ export class DashboardComponent implements AfterViewInit {
   trendData = signal<Record<string, number>>({});
   effectivenessScore = signal<number>(0);
   stressAcademicData = signal<any[]>([]);
+  private apiUrl = process.env['NG_APP_API_URL'] || 'http://app.34.30.233.97.sslip.io/api';
 
   constructor(private http: HttpClient) {}
 
@@ -26,24 +27,24 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   loadData() {
-    this.http.get<any>('http://127.0.0.1:8000/analytics/emotions')
+    this.http.get<any>(`${this.apiUrl}/analytics/emotions`)
       .subscribe(data => {
         this.emotionData.set(data);
         this.createEmotionChart(data);
       });
 
-    this.http.get<any>('http://127.0.0.1:8000/analytics/trend')
+    this.http.get<any>(`${this.apiUrl}/analytics/trend`)
       .subscribe(data => {
         this.trendData.set(data);
         this.createTrendChart(data);
       });
 
-    this.http.get<any>('http://127.0.0.1:8000/analytics/effectiveness')
+    this.http.get<any>(`${this.apiUrl}/analytics/effectiveness`)
       .subscribe(data => {
         this.effectivenessScore.set(data.score);
       });
 
-    this.http.get<any[]>('http://127.0.0.1:8000/analytics/stress_academic')
+    this.http.get<any[]>(`${this.apiUrl}/analytics/stress_academic`)
       .subscribe(data => {
         this.stressAcademicData.set(data);
         if(data && data.length > 0) {

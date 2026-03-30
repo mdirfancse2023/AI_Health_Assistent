@@ -3,12 +3,7 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 
-# 🔥 ABSOLUTE PATH (NO FAIL)
-env_path = "/Users/macbook/Documents/GitHub/AI_Powered_Mental_Health_Assistent/.env"
-load_dotenv(env_path)
-
-
-print("ENV LOADED:", os.getenv("DATABASE_URL"))
+load_dotenv()
 
 from routes.chat_routes import router as chat_router
 from db.database import Base, engine
@@ -19,7 +14,14 @@ app = FastAPI(title="AI Mental Health Assistant")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow Angular
+    allow_origins=[
+        "http://localhost",
+        "http://localhost:80",
+        "http://localhost:4200",
+        "http://app.34.30.233.97.sslip.io",
+        "https://app.34.30.233.97.sslip.io",
+        "*"  # Fallback for any other origins
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

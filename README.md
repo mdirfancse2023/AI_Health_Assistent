@@ -4,6 +4,17 @@ An intelligent, AI-driven mental health assistant designed to support students b
 
 ---
 
+## 📋 Quick Start
+
+**To deploy this application:**
+
+1. **Local testing**: `docker-compose up`
+2. **Cloud deployment**: See [GUIDE.md](GUIDE.md)
+
+The complete step-by-step guide is in [GUIDE.md](GUIDE.md) - everything you need to deploy to GKE!
+
+---
+
 ## 🚀 Project Overview
 
 This project aims to leverage Artificial Intelligence and Data Science to assist students in managing their mental well-being. The system analyzes user inputs, detects emotional states, and provides empathetic responses using Large Language Models (LLMs) via OpenRouter.
