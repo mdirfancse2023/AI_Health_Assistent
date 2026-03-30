@@ -18,6 +18,11 @@ export class ChatService {
       body: JSON.stringify({ message: message, user_id: 'student_1' })
     });
 
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Chat request failed: ${response.status} ${errorBody}`.trim());
+    }
+
     if (!response.body) throw new Error('ReadableStream not supported');
 
     const reader = response.body.getReader();
