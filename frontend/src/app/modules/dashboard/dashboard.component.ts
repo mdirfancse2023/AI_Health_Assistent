@@ -2,6 +2,7 @@ import { Component, signal, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
+import { getApiUrl } from '../../core/config/api-url';
 
 Chart.register(...registerables);
 
@@ -18,7 +19,7 @@ export class DashboardComponent implements AfterViewInit {
   trendData = signal<Record<string, number>>({});
   effectivenessScore = signal<number>(0);
   stressAcademicData = signal<any[]>([]);
-  private apiUrl = process.env['NG_APP_API_URL'] || '/api';
+  private apiUrl = getApiUrl();
 
   constructor(private http: HttpClient) {}
 

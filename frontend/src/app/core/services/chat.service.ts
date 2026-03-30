@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { getApiUrl } from '../config/api-url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = process.env['NG_APP_API_URL'] || '/api';
+  private apiUrl = getApiUrl();
 
   constructor(private http: HttpClient) {}
 
