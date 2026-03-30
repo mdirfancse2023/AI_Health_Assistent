@@ -35,7 +35,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(chat_router)
 app.include_router(chat_router, prefix="/api")
+app.include_router(analytics_router)
 app.include_router(analytics_router, prefix="/api")
 
 @app.get("/")
