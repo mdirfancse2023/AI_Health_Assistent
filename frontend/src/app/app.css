@@ -234,3 +234,13 @@
   font-weight: 500;
   letter-spacing: 0.5px;
 }
+
+/* Fixed styling for navbar layout */
+.nav-content h2 {
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+}
+
+.nav-links {
+  margin-left: auto;
+}
