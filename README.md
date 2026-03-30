@@ -6,12 +6,20 @@ An intelligent, AI-driven mental health assistant designed to support students b
 
 ## 📋 Quick Start
 
-**To deploy this application:**
+**Run or access the project quickly:**
 
-1. **Local testing**: `docker-compose up`
-2. **Cloud deployment**: See [GUIDE.md](GUIDE.md)
+1. **Local full stack**: `docker-compose up`
+2. **Frontend local dev**: `cd frontend && npm install && ng serve`
+3. **Backend local dev**: `cd backend && pip install -r requirements.txt && uvicorn main:app --reload`
+4. **Cloud deployment guide**: See [GUIDE.md](GUIDE.md)
 
-The complete step-by-step guide is in [GUIDE.md](GUIDE.md) - everything you need to deploy to GKE!
+Current deployed URL:
+
+```text
+http://app.136.115.35.202.sslip.io/
+```
+
+The complete GKE setup and deployment flow is documented in [GUIDE.md](GUIDE.md).
 
 ---
 
@@ -76,6 +84,13 @@ Database (PostgreSQL)
 * Evaluates AI Effectiveness via user feedback tracking.
 * Visual insights for Mental Health tracking (Stress vs. Academic Focus)
 
+### 🔐 Authentication & User Accounts
+
+* Login and signup flow backed by FastAPI + PostgreSQL
+* Chats, dashboard data, feedback, and check-ins are tied to the logged-in user
+* Bearer-token based frontend session handling
+* Protected Chat and Dashboard routes
+
 ### 🗂️ Data Storage
 
 * Stores chat history
@@ -86,7 +101,9 @@ Database (PostgreSQL)
 
 * Responsive Angular frontend built with Glassmorphism 
 * Fully functional Dark Mode/Light Mode toggle
-* Clean navigation (Chat + Dashboard)
+* Clean navigation with Login / Sign Up in navbar for guests
+* Inline form validation on invalid auth input
+* Clean navigation (Chat + Dashboard) for authenticated users
 * Styled components with professional layout and structured ChatGPT-style markdown rendering.
 
 ---
@@ -115,6 +132,13 @@ Database (PostgreSQL)
 
 * PostgreSQL
 
+### 🔹 DevOps / Quality
+
+* Docker + Docker Hub
+* Kubernetes (GKE Autopilot)
+* GitHub Actions CI/CD
+* JetBrains Qodana (backend community scan, optional cloud dashboard upload)
+
 ---
 
 ## ⚙️ Installation & Setup
@@ -122,7 +146,7 @@ Database (PostgreSQL)
 ### 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/your-username/AI_Powered_Mental_Health_Assistent.git
+git clone https://github.com/mdirfancse2023/AI_Health_Assistent.git AI_Powered_Mental_Health_Assistent
 cd AI_Powered_Mental_Health_Assistent
 ```
 
@@ -143,6 +167,7 @@ Create `.env` file:
 ```
 OPENROUTER_API_KEY=your_api_key
 DATABASE_URL=postgresql://username:password@localhost:5432/dbname
+AUTH_SECRET_KEY=replace_with_a_long_random_secret
 ```
 
 Run backend:
@@ -170,6 +195,14 @@ http://localhost:4200
 ---
 
 ## 🔌 API Endpoints
+
+### Authentication API
+
+```
+POST /auth/signup
+POST /auth/login
+GET /auth/me
+```
 
 ### Chat API
 
@@ -205,6 +238,12 @@ GET /analytics/effectiveness
 GET /analytics/stress_academic
 ```
 
+### Daily Check-In API
+
+```
+POST /daily-checkin
+```
+
 ---
 
 ## 📊 Dashboard Insights
@@ -228,16 +267,50 @@ GET /analytics/stress_academic
 * API tested using Swagger UI and cURL
 * Frontend tested with Angular dev server
 * Database verified via PostgreSQL logs
+* Auto-deploy configured through GitHub Actions to GKE
+* Qodana workflow added for backend static analysis
+
+---
+
+## 🚢 Deployment & CI
+
+### GitHub Actions Deployment
+
+The repo includes:
+
+* [deploy.yml](.github/workflows/deploy.yml) for Docker build, push, and GKE deployment
+* Workload Identity Federation for keyless GitHub Actions authentication to Google Cloud
+* Immutable image rollout using `github.sha` tags during deployment
+
+Required GitHub secrets:
+
+* `DOCKER_PASSWORD`
+* `OPENROUTER_API_KEY`
+
+### Qodana
+
+The repo also includes:
+
+* [qodana.yml](.github/workflows/qodana.yml)
+* [qodana.yaml](qodana.yaml)
+
+This setup currently keeps Qodana simple by scanning the Python backend with `qodana-python-community`.
+
+If you want Qodana Cloud dashboard uploads, add the GitHub secret:
+
+* `QODANA_TOKEN`
+
+This must be the Qodana **project token** used for dashboard uploads.
 
 ---
 
 ## 📈 Future Enhancements
 
-* User authentication system
 * Advanced emotion detection models
 * Recommendation engine (coping strategies)
 * PDF report generation
-* Mobile responsiveness
+* Mobile responsiveness improvements
+* Role-based admin / counselor views
 
 ---
 
