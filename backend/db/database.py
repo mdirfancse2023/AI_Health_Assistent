@@ -14,7 +14,6 @@ SessionLocal = sessionmaker(bind=engine)
 
 Base = declarative_base()
 
-
 def wait_for_database(max_attempts: int = 30, delay_seconds: int = 2) -> None:
     last_error = None
 
