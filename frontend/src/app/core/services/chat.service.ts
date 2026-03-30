@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = process.env['NG_APP_API_URL'] || 'http://app.34.30.233.97.sslip.io/api';
+  private apiUrl = process.env['NG_APP_API_URL'] || '/api';
 
   constructor(private http: HttpClient) {}
 
