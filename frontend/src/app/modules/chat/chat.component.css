@@ -98,6 +98,98 @@
   scroll-behavior: smooth;
 }
 
+/* Mobile Chat Responsive Styles */
+@media (max-width: 768px) {
+  .chat-wrapper {
+    height: calc(100vh - 100px);
+    padding: 12px;
+  }
+
+  .chat-container {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 16px;
+  }
+
+  .chat-header {
+    padding: 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+  }
+
+  .title-text h3 {
+    font-size: 14px;
+  }
+
+  .status {
+    font-size: 11px;
+  }
+
+  .checkin-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .chat-box {
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-wrapper {
+    height: auto;
+    min-height: calc(100vh - 80px);
+    padding: 8px;
+  }
+
+  .chat-container {
+    max-height: none;
+    height: auto;
+    border-radius: 12px;
+  }
+
+  .chat-header {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .header-title {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .title-text h3 {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .checkin-btn {
+    font-size: 11px;
+    padding: 5px 10px;
+    white-space: nowrap;
+  }
+
+  .chat-box {
+    padding: 12px;
+    gap: 12px;
+  }
+}
+
 .chat-box::-webkit-scrollbar {
   width: 6px;
 }
@@ -327,4 +419,181 @@
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* Mobile Message Bubble and Input Responsive Styles */
+@media (max-width: 768px) {
+  .message-bubble {
+    max-width: 85%;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .feedback-actions {
+    gap: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .feedback-buttons button {
+    font-size: 13px;
+    padding: 3px;
+  }
+
+  .chat-input-area {
+    padding: 16px 20px;
+  }
+
+  .input-container {
+    padding: 5px 5px 5px 14px;
+  }
+
+  .send-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 24px;
+  }
+
+  .modal-content h3 {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .modal-desc {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .slider-group {
+    margin-bottom: 20px;
+  }
+
+  .slider-group label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .value-display {
+    font-size: 20px;
+  }
+
+  .modal-actions {
+    gap: 10px;
+    margin-top: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .message-bubble {
+    max-width: 90%;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .message-content {
+    word-break: break-word;
+  }
+
+  .feedback-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+
+  .feedback-prompt {
+    font-size: 11px;
+  }
+
+  .feedback-buttons {
+    gap: 4px;
+  }
+
+  .feedback-buttons button {
+    font-size: 12px;
+    padding: 2px;
+  }
+
+  .chat-input-area {
+    padding: 12px 16px;
+  }
+
+  .input-container {
+    padding: 4px 4px 4px 12px;
+    border-radius: 20px;
+  }
+
+  .input-container input {
+    font-size: 14px;
+  }
+
+  .send-btn {
+    width: 32px;
+    height: 32px;
+    margin-left: 6px;
+    font-size: 14px;
+  }
+
+  .send-btn:not(:disabled):hover {
+    transform: rotate(-15deg) scale(1.1);
+  }
+
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal-content {
+    width: 100%;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .modal-content h3 {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .modal-desc {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
+  .slider-group {
+    margin-bottom: 16px;
+  }
+
+  .slider-group label {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .slider-container {
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .value-display {
+    font-size: 18px;
+    margin-top: 6px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .btn-cancel,
+  .btn-primary {
+    width: 100%;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
 }
