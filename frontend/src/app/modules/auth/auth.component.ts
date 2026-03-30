@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -16,6 +17,7 @@ export class AuthComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   mode: 'login' | 'signup' = 'login';
   identifier = '';
@@ -25,6 +27,14 @@ export class AuthComponent {
   confirmPassword = '';
   isSubmitting = false;
   errorMessage = '';
+
+  constructor() {
+    this.route.queryParamMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        this.setMode(params.get('mode') === 'signup' ? 'signup' : 'login');
+      });
+  }
 
   setMode(mode: 'login' | 'signup'): void {
     this.mode = mode;

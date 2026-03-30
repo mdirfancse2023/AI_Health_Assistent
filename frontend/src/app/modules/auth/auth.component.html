@@ -2,16 +2,15 @@
   <div class="auth-card glass-panel">
     <div class="auth-header">
       <span class="auth-icon">🧠</span>
-      <h1>AI Mental Health Assistant</h1>
-      <p>Sign in to keep your chat history, dashboard, and check-ins tied to your account.</p>
+      <h1>{{ mode === 'login' ? 'Welcome Back' : 'Create Your Account' }}</h1>
+      <p>
+        {{ mode === 'login'
+          ? 'Sign in to keep your chat history, dashboard, and check-ins tied to your account.'
+          : 'Sign up to save your conversations, dashboard progress, and daily check-ins to your own account.' }}
+      </p>
       <p class="auth-help">
         New account rules: username at least 3 characters, valid email, and password at least 8 characters.
       </p>
-    </div>
-
-    <div class="auth-toggle">
-      <button type="button" [class.active]="mode === 'login'" (click)="setMode('login')">Login</button>
-      <button type="button" [class.active]="mode === 'signup'" (click)="setMode('signup')">Sign Up</button>
     </div>
 
     <form class="auth-form" (ngSubmit)="submit()">

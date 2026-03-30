@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, inject } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { AuthService } from './core/services/auth.service';
 
@@ -13,6 +13,7 @@ import { AuthService } from './core/services/auth.service';
 export class AppComponent implements OnInit {
   isDarkMode = false;
   protected readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
@@ -37,5 +38,14 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  isAuthMode(mode: 'login' | 'signup'): boolean {
+    if (!this.router.url.startsWith('/auth')) {
+      return false;
+    }
+
+    const modeParam = this.router.parseUrl(this.router.url).queryParams['mode'];
+    return (modeParam ?? 'login') === mode;
   }
 }
