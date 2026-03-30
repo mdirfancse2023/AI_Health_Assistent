@@ -75,8 +75,8 @@ jobs:
     - name: Deploy to GKE
       run: |
         kubectl apply -f k8s/app.yaml
-        kubectl rollout restart deployment/backend
-        kubectl rollout restart deployment/frontend
+        kubectl set image deployment/backend backend=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/mental-health-backend:${{ github.sha }}
+        kubectl set image deployment/frontend frontend=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/mental-health-frontend:${{ github.sha }}
         kubectl rollout status deployment/backend --timeout=5m
         kubectl rollout status deployment/frontend --timeout=5m
 
