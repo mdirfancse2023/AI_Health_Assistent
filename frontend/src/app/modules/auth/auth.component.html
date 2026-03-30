@@ -4,6 +4,9 @@
       <span class="auth-icon">🧠</span>
       <h1>AI Mental Health Assistant</h1>
       <p>Sign in to keep your chat history, dashboard, and check-ins tied to your account.</p>
+      <p class="auth-help">
+        New account rules: username at least 3 characters, valid email, and password at least 8 characters.
+      </p>
     </div>
 
     <div class="auth-toggle">
@@ -15,30 +18,30 @@
       <ng-container *ngIf="mode === 'login'; else signupForm">
         <label>
           <span>Username or Email</span>
-          <input [(ngModel)]="identifier" name="identifier" autocomplete="username" />
+          <input [(ngModel)]="identifier" name="identifier" autocomplete="username" required />
         </label>
       </ng-container>
 
       <ng-template #signupForm>
         <label>
           <span>Username</span>
-          <input [(ngModel)]="username" name="username" autocomplete="username" />
+          <input [(ngModel)]="username" name="username" autocomplete="username" minlength="3" required />
         </label>
 
         <label>
           <span>Email</span>
-          <input [(ngModel)]="email" name="email" type="email" autocomplete="email" />
+          <input [(ngModel)]="email" name="email" type="email" autocomplete="email" required />
         </label>
       </ng-template>
 
       <label>
         <span>Password</span>
-        <input [(ngModel)]="password" name="password" type="password" autocomplete="current-password" />
+        <input [(ngModel)]="password" name="password" type="password" autocomplete="current-password" minlength="8" required />
       </label>
 
       <label *ngIf="mode === 'signup'">
         <span>Confirm Password</span>
-        <input [(ngModel)]="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" />
+        <input [(ngModel)]="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required />
       </label>
 
       <div class="auth-error" *ngIf="errorMessage">{{ errorMessage }}</div>

@@ -29,6 +29,10 @@ export class AuthComponent {
   setMode(mode: 'login' | 'signup'): void {
     this.mode = mode;
     this.errorMessage = '';
+
+    if (mode === 'login' && !this.identifier.trim()) {
+      this.identifier = this.username.trim() || this.email.trim();
+    }
   }
 
   submit(): void {
@@ -62,8 +66,29 @@ export class AuthComponent {
       },
       error: (error: HttpErrorResponse) => {
         this.isSubmitting = false;
-        this.errorMessage = error.error?.detail || 'Authentication failed. Please try again.';
+        this.errorMessage = this.getErrorMessage(error);
       }
     });
+  }
+
+  private getErrorMessage(error: HttpErrorResponse): string {
+    const detail = error.error?.detail;
+
+    if (typeof detail === 'string' && detail.trim()) {
+      return detail;
+    }
+
+    if (Array.isArray(detail) && detail.length > 0) {
+      const firstError = detail[0];
+      if (typeof firstError?.msg === 'string' && firstError.msg.trim()) {
+        return firstError.msg;
+      }
+    }
+
+    if (error.status === 0) {
+      return 'Unable to reach the server. Please try again in a moment.';
+    }
+
+    return 'Authentication failed. Please check your details and try again.';
   }
 }
