@@ -1,21 +1,15 @@
 import os
 import json
-import torch
-from transformers import AutoTokenizer, AutoModel
+import requests
 
-# Load lightweight embedding model
-MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-model = AutoModel.from_pretrained(MODEL_NAME)
-
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 RESOURCE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "resources.json")
 
 knowledge_base = []
-knowledge_embeddings = None
 
-def load_and_embed_knowledge_base():
-    """Loads the JSON resources and pre-computes their tensor embeddings on module initialization."""
-    global knowledge_base, knowledge_embeddings
+def load_knowledge_base():
+    """Load the JSON resources"""
+    global knowledge_base
     
     if not os.path.exists(RESOURCE_FILE):
         print(f"RAG WARNING: Knowledge base not found at {RESOURCE_FILE}")
@@ -23,66 +17,63 @@ def load_and_embed_knowledge_base():
 
     with open(RESOURCE_FILE, "r") as f:
         knowledge_base = json.load(f)
-
-    if not knowledge_base:
-        return
-
-    # Extract text content for embedding
-    texts = [item["content"] for item in knowledge_base]
-    
-    # Compute embeddings in a batch
-    print(f"RAG INIT: Computing embeddings for {len(texts)} resources...")
-    knowledge_embeddings = get_embedding(texts)
-    print("RAG INIT: Embeddings computed successfully.")
-
-def get_embedding(texts):
-    """Generates standard dense embeddings using the transformer model."""
-    if isinstance(texts, str):
-        texts = [texts]
-        
-    inputs = tokenizer(texts, padding=True, truncation=True, return_tensors="pt")
-    
-    with torch.no_grad():
-        outputs = model(**inputs)
-        
-    # Standard Mean Pooling: average the token embeddings, ignoring attention mask
-    token_embeddings = outputs.last_hidden_state
-    attention_mask = inputs['attention_mask']
-    
-    input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
-    sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
-    sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)
-    
-    embeddings = sum_embeddings / sum_mask
-    return embeddings
+    print(f"RAG INIT: Loaded {len(knowledge_base)} resources")
 
 def retrieve_context(query: str, top_k: int = 1) -> str:
     """
-    Given a user query, calculates cosine similarity against the pre-computed 
-    knowledge base embeddings and returns the most relevant resource content.
+    Use OpenRouter API to find the most relevant resources from knowledge base
     """
-    if knowledge_embeddings is None or len(knowledge_base) == 0:
+    if not knowledge_base:
         return ""
         
-    query_embedding = get_embedding([query])
-    
-    # Calculate Cosine Similarity: query vs all knowledge base embeddings
-    cos_scores = torch.nn.functional.cosine_similarity(query_embedding, knowledge_embeddings)
-    
-    # Get top K indices
-    top_results = torch.topk(cos_scores, k=min(top_k, len(knowledge_base)))
-    
-    best_matches = []
-    # threshold for relevance (preventing irrelevant RAG injections)
-    for score, idx in zip(top_results.values, top_results.indices):
-        if score.item() > 0.3:  # Only inject if structurally relevant
-            best_matches.append(knowledge_base[idx.item()]["content"])
-            
-    if best_matches:
-        formatted_context = "\n---\n".join(best_matches)
-        return f"[Retrieved University Mental Health Resources]:\n{formatted_context}"
-    
-    return ""
+    try:
+        # Create a prompt to find the most relevant resource
+        resources_text = "\n\n".join([
+            f"Resource {i+1}: {item.get('title', 'Unknown')}\nContent: {item['content'][:200]}..."
+            for i, item in enumerate(knowledge_base[:5])  # Limit to top 5 to keep context small
+        ])
+        
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "openai/gpt-3.5-turbo",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": f"""Given these university mental health resources:
 
-# Initialize embeddings immediately when this module is imported by FastAPI
-load_and_embed_knowledge_base()
+{resources_text}
+
+User query: "{query}"
+
+Return ONLY the number (1-5) of the most relevant resource. Just the number, nothing else."""
+                    }
+                ],
+                "temperature": 0.1,
+                "max_tokens": 5
+            }
+        )
+        
+        if response.status_code == 200:
+            try:
+                result = response.json()["choices"][0]["message"]["content"].strip()
+                idx = int(result) - 1
+                if 0 <= idx < len(knowledge_base):
+                    content = knowledge_base[idx]["content"]
+                    return f"[Retrieved Mental Health Resource: {knowledge_base[idx].get('title', 'Resource')}]\n{content}"
+            except (ValueError, IndexError, KeyError):
+                pass
+        
+        return ""
+            
+    except Exception as e:
+        print(f"RAG retrieval error: {e}")
+        return ""
+
+# Initialize knowledge base immediately when this module is imported by FastAPI
+load_knowledge_base()
+

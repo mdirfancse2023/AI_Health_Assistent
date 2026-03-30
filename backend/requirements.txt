@@ -1,8 +1,6 @@
 fastapi
 uvicorn
 pydantic
-transformers
-torch
 sqlalchemy
 psycopg2-binary
 python-dotenv
