@@ -193,10 +193,10 @@ chmod +x setup.sh
 # NEW cluster name (separate from "codexa-ai")
 ```
 
-**Question 3: Enter Zone**
+**Question 3: Enter Region**
 ```
 > (press Enter to use default)
-us-central1-a
+us-central1
 ```
 
 ### 4.3 Wait for Completion
@@ -239,25 +239,13 @@ gcloud container clusters list
 
 Click "New repository secret" for each:
 
-**Secret 1: DOCKER_USERNAME** (required)
-```
-Name: DOCKER_USERNAME
-Value: your-docker-username
-```
-
-**Secret 2: DOCKER_PASSWORD** (required)
+**Secret 1: DOCKER_PASSWORD** (required)
 ```
 Name: DOCKER_PASSWORD
 Value: dckr_pat_xxxxxxxxxxxxx
 ```
 
-**Secret 3: GCP_PROJECT** (required)
-```
-Name: GCP_PROJECT
-Value: YOUR_GCP_PROJECT_ID
-```
-
-**Secret 4: OPENROUTER_API_KEY** ⭐ (NEW - required for LLM)
+**Secret 2: OPENROUTER_API_KEY** ⭐ (required for LLM)
 ```
 Name: OPENROUTER_API_KEY
 Value: sk-or-v1-xxxxxxxxxxxxxxxx
@@ -270,17 +258,13 @@ Value: sk-or-v1-xxxxxxxxxxxxxxxx
 5. Copy the key (looks like: sk-or-v1-...)
 6. Paste into GitHub Secret
 
-**Secret 5: WIF_PROVIDER** (optional for now)
-```
-Name: WIF_PROVIDER
-Value: projects/123/locations/global/workloadIdentityPools/github-pool/providers/github-provider
-```
+This repo's workflow already contains the configured values for:
+- Docker Hub username
+- GCP project ID
+- Workload Identity provider
+- Workload Identity service account
 
-**Secret 6: WIF_SERVICE_ACCOUNT** (optional for now)
-```
-Name: WIF_SERVICE_ACCOUNT
-Value: github-deployer@your-project.iam.gserviceaccount.com
-```
+If you move this repo to a different Docker Hub account, GCP project, or GitHub repository, update [deploy.yml](/Users/macbook/Documents/GitHub/AI_Powered_Mental_Health_Assistent/.github/workflows/deploy.yml).
 
 ### 5.3 Verify
 You should see all secrets in GitHub Settings.
@@ -291,12 +275,14 @@ You should see all secrets in GitHub Settings.
 
 ### 6.1 Update Docker Username
 
-Replace `DOCKER_USERNAME` with your actual username in k8s/app.yaml:
+For this repo, GitHub Actions replaces `DOCKER_USERNAME` automatically during deployment using the workflow env value.
+
+Only edit `k8s/app.yaml` manually if you plan to run `kubectl apply -f k8s/app.yaml` yourself outside GitHub Actions.
 
 ```bash
 cd /Users/macbook/Documents/GitHub/AI_Powered_Mental_Health_Assistent
 
-# Replace (macOS)
+# Replace manually only if you are not using the GitHub Actions workflow
 sed -i '' 's/DOCKER_USERNAME/your-docker-username/g' k8s/app.yaml
 
 # Example with real username:
@@ -534,9 +520,9 @@ kubectl get ingress
 **Symptom**: GitHub Actions workflow fails at "Build and push"
 
 **Solution**:
-1. Check DOCKER_USERNAME in GitHub Secrets
-2. Check DOCKER_PASSWORD in GitHub Secrets
-3. Verify they're correct (copy from Step 3 & 5)
+1. Check `DOCKER_USERNAME` in [deploy.yml](/Users/macbook/Documents/GitHub/AI_Powered_Mental_Health_Assistent/.github/workflows/deploy.yml)
+2. Check `DOCKER_PASSWORD` in GitHub Secrets
+3. Verify the Docker Hub account can push to that namespace
 
 ### Issue 4: Database Can't Connect
 **Symptom**: Backend logs show connection error
@@ -596,7 +582,7 @@ kubectl get all
 ### Delete Cluster (Full Cleanup)
 ```bash
 gcloud container clusters delete mental-health-cluster \
-  --zone us-central1-a
+  --region us-central1
 ```
 
 ---
@@ -654,12 +640,12 @@ Your Application (GKE Cluster)
 
 | Secret | Used By | Purpose |
 |--------|---------|---------|
-| `DOCKER_USERNAME` | GitHub Actions | Login to Docker Hub to push images |
 | `DOCKER_PASSWORD` | GitHub Actions | Password/token for Docker Hub |
-| `GCP_PROJECT` | GitHub Actions | Deploy to your Google Cloud project |
 | `OPENROUTER_API_KEY` | Backend container | LLM API calls for chatbot responses |
-| `WIF_PROVIDER` | GitHub Actions | Secure GCP authentication (optional) |
-| `WIF_SERVICE_ACCOUNT` | GitHub Actions | GCP service account (optional) |
+| `DOCKER_USERNAME` | Workflow env | Docker Hub namespace used for image tags |
+| `GCP_PROJECT` | Workflow env | Google Cloud project used for deployment |
+| `WIF_PROVIDER` | Workflow env | Keyless GitHub Actions to Google Cloud authentication |
+| `WIF_SERVICE_ACCOUNT` | Workflow env | Service account impersonated by GitHub Actions |
 
 **Key Secret: OPENROUTER_API_KEY**
 - Used by backend for AI-powered chat responses
@@ -734,7 +720,7 @@ kubectl rollout restart deployment/backend
 
 # Delete
 kubectl delete -f k8s/app.yaml       # Delete app
-gcloud container clusters delete mental-health-cluster --zone us-central1-a  # Delete cluster
+gcloud container clusters delete mental-health-cluster --region us-central1  # Delete cluster
 ```
 
 ---

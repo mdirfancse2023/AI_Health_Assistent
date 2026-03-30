@@ -6,10 +6,12 @@ on:
 
 env:
   DOCKER_REGISTRY: docker.io
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_USERNAME: mdirfancse2023
   GKE_CLUSTER: mental-health-cluster
-  GKE_ZONE: us-central1-a
-  GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+  GKE_LOCATION: us-central1
+  GCP_PROJECT: ai-mental-health-assistent
+  WIF_PROVIDER: projects/720348842295/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+  WIF_SERVICE_ACCOUNT: github-deployer@ai-mental-health-assistent.iam.gserviceaccount.com
 
 jobs:
   build-and-deploy:
@@ -28,7 +30,7 @@ jobs:
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
+        username: ${{ env.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push backend
@@ -38,8 +40,8 @@ jobs:
         file: ./docker/Dockerfile.backend
         push: true
         tags: |
-          ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/mental-health-backend:latest
-          ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/mental-health-backend:${{ github.sha }}
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/mental-health-backend:latest
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/mental-health-backend:${{ github.sha }}
 
     - name: Build and push frontend
       uses: docker/build-push-action@v5
@@ -48,14 +50,15 @@ jobs:
         file: ./docker/Dockerfile.frontend
         push: true
         tags: |
-          ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/mental-health-frontend:latest
-          ${{ env.DOCKER_REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/mental-health-frontend:${{ github.sha }}
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/mental-health-frontend:latest
+          ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/mental-health-frontend:${{ github.sha }}
 
     - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v2
+      uses: google-github-actions/auth@v3
       with:
-        project_id: ${{ secrets.GCP_PROJECT }}
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ env.GCP_PROJECT }}
+        workload_identity_provider: ${{ env.WIF_PROVIDER }}
+        service_account: ${{ env.WIF_SERVICE_ACCOUNT }}
 
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
@@ -63,18 +66,18 @@ jobs:
     - name: Get GKE credentials
       run: |
         gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} \
-          --zone ${{ env.GKE_ZONE }} \
+          --region ${{ env.GKE_LOCATION }} \
           --project ${{ env.GCP_PROJECT }}
 
     - name: Update manifests
       run: |
-        sed -i "s|DOCKER_USERNAME|${{ secrets.DOCKER_USERNAME }}|g" k8s/app.yaml
         sed -i "s|PLACEHOLDER_OPENROUTER_API_KEY|${{ secrets.OPENROUTER_API_KEY }}|g" k8s/app.yaml
-        sed -i "s|${{ github.sha }}|${{ github.sha }}|g" k8s/app.yaml
 
     - name: Deploy to GKE
       run: |
         kubectl apply -f k8s/app.yaml
+        kubectl rollout restart deployment/backend
+        kubectl rollout restart deployment/frontend
         kubectl rollout status deployment/backend --timeout=5m
         kubectl rollout status deployment/frontend --timeout=5m
 
