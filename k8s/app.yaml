@@ -140,6 +140,7 @@ spec:
       - name: frontend
         image: mdirfancse2023/mental-health-frontend:latest
         imagePullPolicy: Always
+        command: ["http-server", "dist/browser", "-p", "80", "--gzip", "-c-1", "--proxy", "http://localhost:80?"]
         ports:
         - containerPort: 80
         resources:

@@ -18,4 +18,4 @@ COPY --from=builder /build/dist/frontend ./dist
 
 EXPOSE 80
 
-CMD ["http-server", "dist", "-p", "80", "--gzip", "-c-1"]
+CMD ["http-server", "dist/browser", "-p", "80", "--gzip", "-c-1", "--proxy", "http://localhost:80?"]
