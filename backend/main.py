@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,11 +7,19 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 from routes.chat_routes import router as chat_router
-from db.database import Base, engine
+from db.database import Base, engine, wait_for_database
 
 from routes.analytics_routes import router as analytics_router
 
-app = FastAPI(title="AI Mental Health Assistant")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    wait_for_database()
+    Base.metadata.create_all(bind=engine)
+    yield
+
+
+app = FastAPI(title="AI Mental Health Assistant", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,9 +35,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-Base.metadata.create_all(bind=engine)
-
 app.include_router(chat_router)
 
 app.include_router(analytics_router)
