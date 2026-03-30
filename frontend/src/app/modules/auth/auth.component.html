@@ -1,0 +1,51 @@
+<div class="auth-page">
+  <div class="auth-card glass-panel">
+    <div class="auth-header">
+      <span class="auth-icon">🧠</span>
+      <h1>AI Mental Health Assistant</h1>
+      <p>Sign in to keep your chat history, dashboard, and check-ins tied to your account.</p>
+    </div>
+
+    <div class="auth-toggle">
+      <button type="button" [class.active]="mode === 'login'" (click)="setMode('login')">Login</button>
+      <button type="button" [class.active]="mode === 'signup'" (click)="setMode('signup')">Sign Up</button>
+    </div>
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <ng-container *ngIf="mode === 'login'; else signupForm">
+        <label>
+          <span>Username or Email</span>
+          <input [(ngModel)]="identifier" name="identifier" autocomplete="username" />
+        </label>
+      </ng-container>
+
+      <ng-template #signupForm>
+        <label>
+          <span>Username</span>
+          <input [(ngModel)]="username" name="username" autocomplete="username" />
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input [(ngModel)]="email" name="email" type="email" autocomplete="email" />
+        </label>
+      </ng-template>
+
+      <label>
+        <span>Password</span>
+        <input [(ngModel)]="password" name="password" type="password" autocomplete="current-password" />
+      </label>
+
+      <label *ngIf="mode === 'signup'">
+        <span>Confirm Password</span>
+        <input [(ngModel)]="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" />
+      </label>
+
+      <div class="auth-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <button class="submit-btn" type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Please wait...' : mode === 'login' ? 'Login' : 'Create Account' }}
+      </button>
+    </form>
+  </div>
+</div>

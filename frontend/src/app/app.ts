@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, inject } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule, DOCUMENT } from '@angular/common';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 })
 export class AppComponent implements OnInit {
   isDarkMode = false;
+  protected readonly authService = inject(AuthService);
 
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
@@ -31,5 +33,9 @@ export class AppComponent implements OnInit {
       this.document.documentElement.removeAttribute('data-theme');
       localStorage.setItem('theme', 'light');
     }
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

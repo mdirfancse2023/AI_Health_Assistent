@@ -1,10 +1,9 @@
 from db.database import SessionLocal
 from models.chat_model import ChatLog
 from collections import Counter
-from datetime import datetime
 
 
-def get_emotion_distribution(user_id="student_1"):
+def get_emotion_distribution(user_id: str):
     db = SessionLocal()
     try:
         chats = db.query(ChatLog)\
@@ -18,7 +17,7 @@ def get_emotion_distribution(user_id="student_1"):
         db.close()
 
 
-def get_chat_trend(user_id="student_1"):
+def get_chat_trend(user_id: str):
     db = SessionLocal()
     try:
         chats = db.query(ChatLog)\
@@ -37,7 +36,8 @@ def get_chat_trend(user_id="student_1"):
 
 from models.chat_model import DailyCheckin
 
-def get_effectiveness_score(user_id="student_1"):
+
+def get_effectiveness_score(user_id: str):
     db = SessionLocal()
     try:
         chats = db.query(ChatLog).filter(ChatLog.user_id == user_id, ChatLog.feedback_score != 0).all()
@@ -51,7 +51,8 @@ def get_effectiveness_score(user_id="student_1"):
     finally:
         db.close()
 
-def get_stress_and_academic_trend(user_id="student_1"):
+
+def get_stress_and_academic_trend(user_id: str):
     db = SessionLocal()
     try:
         checkins = db.query(DailyCheckin).filter(DailyCheckin.user_id == user_id).order_by(DailyCheckin.created_at.asc()).all()

@@ -61,6 +61,30 @@
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
+.user-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary-color);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 14px;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #b91c1c;
+}
+
 .theme-toggle {
   background: rgba(99, 102, 241, 0.1);
   border-radius: 50%;

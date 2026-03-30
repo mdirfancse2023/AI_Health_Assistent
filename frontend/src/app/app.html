@@ -3,20 +3,29 @@
     <h2>🧠 AI Mental Health Assistent</h2>
 
     <div class="nav-links">
-      <a 
-        routerLink="/" 
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        Chat
-      </a>
+      <ng-container *ngIf="authService.isAuthenticated(); else guestLinks">
+        <a 
+          routerLink="/chat" 
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Chat
+        </a>
 
-      <a 
-        routerLink="/dashboard" 
-        routerLinkActive="active"
-      >
-        Dashboard
-      </a>
+        <a 
+          routerLink="/dashboard" 
+          routerLinkActive="active"
+        >
+          Dashboard
+        </a>
+
+        <span class="user-pill">{{ authService.currentUser()?.username }}</span>
+        <button class="logout-btn" (click)="logout()">Logout</button>
+      </ng-container>
+
+      <ng-template #guestLinks>
+        <a routerLink="/auth" routerLinkActive="active">Login</a>
+      </ng-template>
       
       <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
         <span *ngIf="isDarkMode">☀️</span>

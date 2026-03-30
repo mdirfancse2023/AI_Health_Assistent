@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { getApiUrl } from '../config/api-url';
+import { getStoredAccessToken } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,17 @@ export class ChatService {
   constructor(private http: HttpClient) {}
 
   async *sendMessageStream(message: string): AsyncGenerator<any, void, unknown> {
+    const token = getStoredAccessToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${this.apiUrl}/chat`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: message, user_id: 'student_1' })
+      headers,
+      body: JSON.stringify({ message: message })
     });
 
     if (!response.ok) {
@@ -61,7 +69,6 @@ export class ChatService {
 
   sendCheckin(stressLevel: number, academicFocus: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/chat/checkin`, {
-      user_id: "student_1",
       stress_level: stressLevel,
       academic_focus: academicFocus
     });

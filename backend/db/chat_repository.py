@@ -1,6 +1,7 @@
 from db.database import SessionLocal
 from models.chat_model import ChatLog
 
+
 def save_chat(user_id, message, emotion, response):
     db = SessionLocal()
     try:
@@ -48,17 +49,22 @@ def get_emotion_summary(user_id):
     finally:
         db.close()
 
-def save_feedback(chat_id: int, score: int):
+
+def save_feedback(chat_id: int, user_id: str, score: int) -> bool:
     db = SessionLocal()
     try:
-        chat = db.query(ChatLog).filter(ChatLog.id == chat_id).first()
+        chat = db.query(ChatLog).filter(ChatLog.id == chat_id, ChatLog.user_id == user_id).first()
         if chat:
             chat.feedback_score = score
             db.commit()
+            return True
+        return False
     finally:
         db.close()
 
+
 from models.chat_model import DailyCheckin
+
 
 def save_daily_checkin(user_id: str, stress_level: int, academic_focus: int):
     db = SessionLocal()
