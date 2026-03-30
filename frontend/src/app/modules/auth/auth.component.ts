@@ -27,6 +27,7 @@ export class AuthComponent {
   confirmPassword = '';
   isSubmitting = false;
   errorMessage = '';
+  attemptedSubmit = false;
 
   constructor() {
     this.route.queryParamMap
@@ -39,6 +40,7 @@ export class AuthComponent {
   setMode(mode: 'login' | 'signup'): void {
     this.mode = mode;
     this.errorMessage = '';
+    this.attemptedSubmit = false;
 
     if (mode === 'login' && !this.identifier.trim()) {
       this.identifier = this.username.trim() || this.email.trim();
@@ -47,19 +49,15 @@ export class AuthComponent {
 
   submit(): void {
     this.errorMessage = '';
+    this.attemptedSubmit = true;
 
     if (this.mode === 'signup') {
-      if (!this.username.trim() || !this.email.trim() || !this.password.trim()) {
-        this.errorMessage = 'All signup fields are required.';
+      if (this.signupValidationMessage) {
+        this.errorMessage = this.signupValidationMessage;
         return;
       }
-
-      if (this.password !== this.confirmPassword) {
-        this.errorMessage = 'Passwords do not match.';
-        return;
-      }
-    } else if (!this.identifier.trim() || !this.password.trim()) {
-      this.errorMessage = 'Username/email and password are required.';
+    } else if (this.loginValidationMessage) {
+      this.errorMessage = this.loginValidationMessage;
       return;
     }
 
@@ -100,5 +98,80 @@ export class AuthComponent {
     }
 
     return 'Authentication failed. Please check your details and try again.';
+  }
+
+  get usernameValidationMessage(): string {
+    if (!this.username.trim()) {
+      return 'Username is required.';
+    }
+
+    if (this.username.trim().length < 3) {
+      return 'Username must be at least 3 characters.';
+    }
+
+    return '';
+  }
+
+  get emailValidationMessage(): string {
+    const email = this.email.trim();
+
+    if (!email) {
+      return 'Email is required.';
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return 'Enter a valid email address.';
+    }
+
+    return '';
+  }
+
+  get passwordValidationMessage(): string {
+    if (!this.password) {
+      return 'Password is required.';
+    }
+
+    if (this.password.length < 8) {
+      return 'Password must be at least 8 characters.';
+    }
+
+    return '';
+  }
+
+  get confirmPasswordValidationMessage(): string {
+    if (!this.confirmPassword) {
+      return 'Please confirm your password.';
+    }
+
+    if (this.password !== this.confirmPassword) {
+      return 'Passwords do not match.';
+    }
+
+    return '';
+  }
+
+  get identifierValidationMessage(): string {
+    if (!this.identifier.trim()) {
+      return 'Username or email is required.';
+    }
+
+    return '';
+  }
+
+  get signupValidationMessage(): string {
+    return (
+      this.usernameValidationMessage ||
+      this.emailValidationMessage ||
+      this.passwordValidationMessage ||
+      this.confirmPasswordValidationMessage
+    );
+  }
+
+  get loginValidationMessage(): string {
+    return this.identifierValidationMessage || this.passwordValidationMessage;
+  }
+
+  showFieldError(message: string, shouldShow: boolean): boolean {
+    return shouldShow && !!message;
   }
 }

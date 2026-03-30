@@ -3,14 +3,6 @@
     <div class="auth-header">
       <span class="auth-icon">🧠</span>
       <h1>{{ mode === 'login' ? 'Welcome Back' : 'Create Your Account' }}</h1>
-      <p>
-        {{ mode === 'login'
-          ? 'Sign in to keep your chat history, dashboard, and check-ins tied to your account.'
-          : 'Sign up to save your conversations, dashboard progress, and daily check-ins to your own account.' }}
-      </p>
-      <p class="auth-help">
-        New account rules: username at least 3 characters, valid email, and password at least 8 characters.
-      </p>
     </div>
 
     <form class="auth-form" (ngSubmit)="submit()">
@@ -19,6 +11,7 @@
           <span>Username or Email</span>
           <input [(ngModel)]="identifier" name="identifier" autocomplete="username" required />
         </label>
+        <div class="field-error" *ngIf="showFieldError(identifierValidationMessage, attemptedSubmit && !identifier.trim())">{{ identifierValidationMessage }}</div>
       </ng-container>
 
       <ng-template #signupForm>
@@ -26,22 +19,26 @@
           <span>Username</span>
           <input [(ngModel)]="username" name="username" autocomplete="username" minlength="3" required />
         </label>
+        <div class="field-error" *ngIf="showFieldError(usernameValidationMessage, attemptedSubmit || username.length > 0)">{{ usernameValidationMessage }}</div>
 
         <label>
           <span>Email</span>
           <input [(ngModel)]="email" name="email" type="email" autocomplete="email" required />
         </label>
+        <div class="field-error" *ngIf="showFieldError(emailValidationMessage, attemptedSubmit || email.length > 0)">{{ emailValidationMessage }}</div>
       </ng-template>
 
       <label>
         <span>Password</span>
         <input [(ngModel)]="password" name="password" type="password" autocomplete="current-password" minlength="8" required />
       </label>
+      <div class="field-error" *ngIf="showFieldError(passwordValidationMessage, attemptedSubmit || password.length > 0)">{{ passwordValidationMessage }}</div>
 
       <label *ngIf="mode === 'signup'">
         <span>Confirm Password</span>
         <input [(ngModel)]="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required />
       </label>
+      <div class="field-error" *ngIf="mode === 'signup' && showFieldError(confirmPasswordValidationMessage, attemptedSubmit || confirmPassword.length > 0)">{{ confirmPasswordValidationMessage }}</div>
 
       <div class="auth-error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
