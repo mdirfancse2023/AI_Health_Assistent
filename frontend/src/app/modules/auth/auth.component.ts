@@ -4,6 +4,7 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TimeoutError, timeout } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -67,19 +68,29 @@ export class AuthComponent {
       ? this.authService.signup(this.username.trim(), this.email.trim(), this.password)
       : this.authService.login(this.identifier.trim(), this.password);
 
-    request$.subscribe({
+    request$
+      .pipe(timeout(7000))
+      .subscribe({
       next: () => {
         this.isSubmitting = false;
         this.router.navigateByUrl(this.route.snapshot.queryParamMap.get('redirectTo') || '/chat');
       },
-      error: (error: HttpErrorResponse) => {
+      error: (error: unknown) => {
         this.isSubmitting = false;
         this.errorMessage = this.getErrorMessage(error);
       }
     });
   }
 
-  private getErrorMessage(error: HttpErrorResponse): string {
+  private getErrorMessage(error: unknown): string {
+    if (error instanceof TimeoutError) {
+      return 'Login request took too long. Please try again.';
+    }
+
+    if (!(error instanceof HttpErrorResponse)) {
+      return 'Authentication failed. Please check your details and try again.';
+    }
+
     const detail = error.error?.detail;
 
     if (typeof detail === 'string' && detail.trim()) {
