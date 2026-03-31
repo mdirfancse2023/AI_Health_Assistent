@@ -107,8 +107,9 @@
     height: calc(100vh - 140px);
     height: calc(100dvh - 140px);
     min-height: auto;
-    padding: 0;
+    padding: 12px 12px 0 12px;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .chat-container {
@@ -118,8 +119,7 @@
     min-height: auto;
     max-height: none;
     border-radius: 16px 16px 0 0;
-    border-left: none;
-    border-right: none;
+    border: 1px solid var(--glass-border);
     border-bottom: none;
   }
 
@@ -159,8 +159,9 @@
     height: calc(100vh - 140px);
     height: calc(100dvh - 140px);
     min-height: auto;
-    padding: 0;
+    padding: 12px 8px 0 8px;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .chat-container {
@@ -169,9 +170,8 @@
     height: 100%;
     min-height: auto;
     max-height: none;
-    border-radius: 12px 12px 0 0;
-    border-left: none;
-    border-right: none;
+    border-radius: 16px 16px 0 0;
+    border: 1px solid var(--glass-border);
     border-bottom: none;
   }
 
