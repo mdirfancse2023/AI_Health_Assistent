@@ -123,7 +123,8 @@
     font-size: 15px;
     width: auto;
     flex: 1; /* allow it to take up space on left */
-    justify-content: flex-start;
+    min-width: 0; /* allows flex shrinkage */
+    display: block; /* fix flex + background-clip bugs for ellipsis */
     text-align: left;
     white-space: nowrap;
     overflow: hidden;
@@ -209,6 +210,8 @@
 
   .nav-content h2 {
     font-size: 14px;
+    min-width: 0;
+    display: block; /* maintain text rendering fix */
   }
 
   .nav-links {
@@ -256,12 +259,14 @@
   letter-spacing: 0.5px;
 }
 
-/* Fixed styling for navbar layout */
-.nav-content h2 {
-  flex-shrink: 0 !important;
-  flex-grow: 0 !important;
-}
+/* Fixed styling for desktop navbar layout */
+@media (min-width: 769px) {
+  .nav-content h2 {
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
 
-.nav-links {
-  margin-left: auto;
+  .nav-links {
+    margin-left: auto;
+  }
 }
