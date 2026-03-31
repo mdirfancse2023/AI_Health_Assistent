@@ -75,6 +75,8 @@ export class DashboardComponent implements AfterViewInit {
         }]
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         cutout: '70%',
         plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 13 } } } }
       }
@@ -99,6 +101,8 @@ export class DashboardComponent implements AfterViewInit {
          }]
       },
       options: {
+         responsive: true,
+         maintainAspectRatio: false,
          plugins: { legend: { display: false } },
          scales: { 
              x: { 
@@ -139,6 +143,8 @@ export class DashboardComponent implements AfterViewInit {
         ]
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 13 } } } },
         scales: { 
             x: { 
