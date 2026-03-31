@@ -106,7 +106,7 @@
 @media (max-width: 768px) {
   .navbar {
     padding: 10px 12px;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
   }
 
   .nav-content {
@@ -132,39 +132,46 @@
   .nav-links {
     width: 100%;
     margin-left: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 8px;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
     align-items: stretch;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-links > * {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .nav-links a {
-    font-size: 12px;
-    padding: 8px 10px;
+    font-size: 11px;
+    padding: 8px 6px;
     white-space: nowrap;
     text-align: center;
   }
 
   .user-pill {
     font-size: 11px;
-    width: 100%;
-    min-width: 0;
     justify-content: center;
     border-radius: 8px;
-    padding: 8px 10px;
+    padding: 8px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .logout-btn {
-    font-size: 12px;
-    width: 100%;
-    padding: 8px 10px;
+    font-size: 11px;
+    padding: 8px 6px;
     white-space: nowrap;
   }
 
   .theme-toggle {
-    width: 100%;
+    width: auto;
     height: 36px;
-    font-size: 14px;
+    font-size: 13px;
     margin-left: 0;
     border-radius: 8px;
   }
@@ -173,7 +180,7 @@
 @media (max-width: 480px) {
   .navbar {
     padding: 8px 10px;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
   }
 
   .nav-content {
@@ -188,30 +195,29 @@
   }
 
   .nav-links {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
+    gap: 4px;
   }
 
   .nav-links a {
-    font-size: 11px;
-    padding: 7px 8px;
+    font-size: 10px;
+    padding: 7px 4px;
     border-radius: 5px;
   }
 
   .user-pill {
-    font-size: 10px;
-    padding: 7px 8px;
+    font-size: 9px;
+    padding: 7px 4px;
   }
 
   .logout-btn {
-    font-size: 11px;
-    padding: 7px 8px;
+    font-size: 10px;
+    padding: 7px 4px;
   }
 
   .theme-toggle {
-    width: 100%;
-    height: 34px;
-    font-size: 13px;
+    width: auto;
+    height: 32px;
+    font-size: 12px;
     margin-left: 0;
   }
 }
