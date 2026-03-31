@@ -12,6 +12,7 @@ import { AuthService } from './core/services/auth.service';
 })
 export class AppComponent implements OnInit {
   isDarkMode = false;
+  isUserMenuOpen = false;
   protected readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -38,6 +39,11 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+    this.isUserMenuOpen = false;
+  }
+
+  toggleUserMenu() {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
   }
 
   isAuthMode(mode: 'login' | 'signup'): boolean {

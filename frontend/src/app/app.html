@@ -19,8 +19,6 @@
           Dashboard
         </a>
 
-        <span class="user-pill">{{ authService.currentUser()?.username }}</span>
-        <button class="logout-btn" (click)="logout()">Logout</button>
       </ng-container>
 
       <ng-template #guestLinks>
@@ -42,10 +40,24 @@
       </ng-template>
     </div>
     
-    <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
-      <span *ngIf="isDarkMode">☀️</span>
-      <span *ngIf="!isDarkMode">🌙</span>
-    </button>
+    <div class="header-actions">
+      <ng-container *ngIf="authService.isAuthenticated()">
+        <div class="user-menu-container">
+          <button class="user-badge" (click)="toggleUserMenu()">
+            {{ authService.currentUser()?.username?.charAt(0)?.toUpperCase() || 'U' }}
+          </button>
+          <div class="user-dropdown" *ngIf="isUserMenuOpen">
+            <span class="dropdown-name">{{ authService.currentUser()?.username }}</span>
+            <button class="dropdown-logout" (click)="logout()">Logout</button>
+          </div>
+        </div>
+      </ng-container>
+
+      <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
+        <span *ngIf="isDarkMode">☀️</span>
+        <span *ngIf="!isDarkMode">🌙</span>
+      </button>
+    </div>
   </div>
 </nav>
 
