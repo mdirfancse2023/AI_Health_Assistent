@@ -111,53 +111,62 @@
 
   .nav-content {
     max-width: 100%;
-    padding: 8px 12px;
-    justify-content: space-between;
-    gap: 8px;
+    padding: 10px 12px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 10px;
     border-radius: 12px;
   }
 
   .nav-content h2 {
-    font-size: 14px;
-    flex-shrink: 0;
-    min-width: fit-content;
+    font-size: 15px;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .nav-links {
-    flex-wrap: nowrap;
-    justify-content: flex-end;
-    gap: 6px;
-    flex-shrink: 1;
-    overflow-x: auto;
+    width: 100%;
+    margin-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
+    align-items: stretch;
   }
 
   .nav-links a {
-    font-size: 11px;
-    padding: 6px 10px;
-    flex-shrink: 0;
+    font-size: 12px;
+    padding: 8px 10px;
     white-space: nowrap;
+    text-align: center;
   }
 
   .user-pill {
     font-size: 11px;
-    padding: 5px 10px;
-    flex-shrink: 0;
-    white-space: nowrap;
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    border-radius: 8px;
+    padding: 8px 10px;
   }
 
   .logout-btn {
-    font-size: 11px;
-    padding: 5px 10px;
-    flex-shrink: 0;
+    font-size: 12px;
+    width: 100%;
+    padding: 8px 10px;
     white-space: nowrap;
   }
 
   .theme-toggle {
-    width: 30px;
-    height: 30px;
-    font-size: 13px;
-    margin-left: 4px;
-    flex-shrink: 0;
+    width: 100%;
+    height: 36px;
+    font-size: 14px;
+    margin-left: 0;
+    border-radius: 8px;
   }
 }
 
@@ -169,53 +178,41 @@
 
   .nav-content {
     max-width: 100%;
-    padding: 6px 10px;
-    gap: 4px;
+    padding: 8px 10px;
+    gap: 8px;
     border-radius: 10px;
   }
 
   .nav-content h2 {
-    font-size: 12px;
-    flex-shrink: 0;
-    min-width: fit-content;
+    font-size: 13px;
   }
 
   .nav-links {
-    flex-wrap: nowrap;
-    gap: 4px;
-    overflow-x: auto;
-    flex-shrink: 1;
-    -webkit-overflow-scrolling: touch;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .nav-links a {
-    font-size: 10px;
-    padding: 4px 8px;
+    font-size: 11px;
+    padding: 7px 8px;
     border-radius: 5px;
-    flex-shrink: 0;
-    white-space: nowrap;
   }
 
   .user-pill {
     font-size: 10px;
-    padding: 4px 8px;
-    flex-shrink: 0;
-    white-space: nowrap;
+    padding: 7px 8px;
   }
 
   .logout-btn {
-    font-size: 10px;
-    padding: 4px 8px;
-    flex-shrink: 0;
-    white-space: nowrap;
+    font-size: 11px;
+    padding: 7px 8px;
   }
 
   .theme-toggle {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
-    margin-left: 2px;
-    flex-shrink: 0;
+    width: 100%;
+    height: 34px;
+    font-size: 13px;
+    margin-left: 0;
   }
 }
 
