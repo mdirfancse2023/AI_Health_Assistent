@@ -40,12 +40,12 @@
           Sign Up
         </a>
       </ng-template>
-      
-      <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
-        <span *ngIf="isDarkMode">☀️</span>
-        <span *ngIf="!isDarkMode">🌙</span>
-      </button>
     </div>
+    
+    <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="'Toggle theme'">
+      <span *ngIf="isDarkMode">☀️</span>
+      <span *ngIf="!isDarkMode">🌙</span>
+    </button>
   </div>
 </nav>
 

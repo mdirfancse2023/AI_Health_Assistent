@@ -112,21 +112,34 @@
   .nav-content {
     max-width: 100%;
     padding: 10px 12px;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 10px;
+    flex-wrap: wrap; /* Replace column direction */
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     border-radius: 12px;
   }
 
   .nav-content h2 {
     font-size: 15px;
-    width: 100%;
-    justify-content: center;
-    text-align: center;
+    width: auto;
+    flex: 1; /* allow it to take up space on left */
+    justify-content: flex-start;
+    text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    margin-left: auto;
+    border-radius: 50%;
+    order: 2; /* Move to the right of header */
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .nav-links {
@@ -134,10 +147,11 @@
     margin-left: 0;
     display: flex;
     flex-wrap: nowrap;
-    gap: 6px;
+    gap: 8px;
     align-items: stretch;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    order: 3; /* Move links to the second row below title */
   }
 
   .nav-links > * {
@@ -145,34 +159,37 @@
     min-width: 0;
   }
 
+  /* Make navigation items larger and block-level to fill space */
   .nav-links a {
-    font-size: 11px;
-    padding: 8px 6px;
+    font-size: 13px;
+    padding: 12px 6px;
     white-space: nowrap;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
   }
 
   .user-pill {
-    font-size: 11px;
+    font-size: 13px;
     justify-content: center;
     border-radius: 8px;
-    padding: 8px 6px;
+    padding: 12px 6px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
   }
 
   .logout-btn {
-    font-size: 11px;
-    padding: 8px 6px;
-    white-space: nowrap;
-  }
-
-  .theme-toggle {
-    width: auto;
-    height: 36px;
     font-size: 13px;
-    margin-left: 0;
+    padding: 12px 6px;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 8px;
   }
 }
@@ -186,39 +203,40 @@
   .nav-content {
     max-width: 100%;
     padding: 8px 10px;
-    gap: 8px;
+    gap: 10px;
     border-radius: 10px;
   }
 
   .nav-content h2 {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .nav-links {
-    gap: 4px;
+    gap: 6px;
   }
 
   .nav-links a {
-    font-size: 10px;
-    padding: 7px 4px;
-    border-radius: 5px;
+    font-size: 12px;
+    padding: 12px 4px;
+    border-radius: 6px;
   }
 
   .user-pill {
-    font-size: 9px;
-    padding: 7px 4px;
+    font-size: 11px;
+    padding: 12px 4px;
   }
 
   .logout-btn {
-    font-size: 10px;
-    padding: 7px 4px;
+    font-size: 12px;
+    padding: 12px 4px;
+    border-radius: 6px;
   }
 
   .theme-toggle {
-    width: auto;
-    height: 32px;
-    font-size: 12px;
-    margin-left: 0;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    margin-left: auto;
   }
 }
 
