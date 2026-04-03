@@ -1,0 +1,20 @@
+# This Caddyfile provides automatic HTTP to HTTPS redirection and free SSL certificates
+# via Let's Encrypt / ZeroSSL for the domain specified in the DOMAIN environment variable.
+# If DOMAIN is not set, it defaults to localhost (without HTTPS).
+
+{$DOMAIN:localhost} {
+    # Encode responses in gzip or zstd
+    encode zstd gzip
+
+    # Proxy all /api/* requests to the backend service
+    # If the backend expects the /api prefix, use 'handle'
+    # If the backend expects it stripped, use 'handle_path'
+    handle /api* {
+        reverse_proxy backend:8000
+    }
+    
+    # Proxy all other requests to the frontend service
+    handle {
+        reverse_proxy frontend:80
+    }
+}
