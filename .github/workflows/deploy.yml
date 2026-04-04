@@ -71,9 +71,17 @@ jobs:
     - name: Update manifests
       run: |
         sed -i "s|PLACEHOLDER_OPENROUTER_API_KEY|${{ secrets.OPENROUTER_API_KEY }}|g" k8s/app.yaml
+        if grep -q "PLACEHOLDER_LETSENCRYPT_EMAIL" k8s/cert-manager-clusterissuer.yaml; then
+          if [ -z "${{ secrets.LETSENCRYPT_EMAIL }}" ]; then
+            echo "Missing LETSENCRYPT_EMAIL GitHub secret"
+            exit 1
+          fi
+          sed -i "s|PLACEHOLDER_LETSENCRYPT_EMAIL|${{ secrets.LETSENCRYPT_EMAIL }}|g" k8s/cert-manager-clusterissuer.yaml
+        fi
 
     - name: Deploy to GKE
       run: |
+        kubectl apply -f k8s/cert-manager-clusterissuer.yaml
         kubectl apply -f k8s/app.yaml
         kubectl set image deployment/backend backend=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/mental-health-backend:${{ github.sha }}
         kubectl set image deployment/frontend frontend=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_USERNAME }}/mental-health-frontend:${{ github.sha }}

@@ -28,10 +28,22 @@ gcloud container clusters get-credentials $CLUSTER_NAME --region $REGION
 # Install NGINX Ingress
 echo "Installing NGINX Ingress..."
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add jetstack https://charts.jetstack.io --force-update
 helm repo update
-helm install nginx ingress-nginx/ingress-nginx \
+helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   -n ingress-nginx --create-namespace \
-  --set controller.service.type=LoadBalancer || echo "NGINX already installed"
+  --set controller.service.type=LoadBalancer
+
+# Install cert-manager for Let's Encrypt certificates
+echo "Installing cert-manager..."
+helm upgrade --install cert-manager jetstack/cert-manager \
+  -n cert-manager --create-namespace \
+  --set crds.enabled=true
+
+echo "Waiting for cert-manager..."
+kubectl rollout status deployment/cert-manager -n cert-manager --timeout=180s
+kubectl rollout status deployment/cert-manager-cainjector -n cert-manager --timeout=180s
+kubectl rollout status deployment/cert-manager-webhook -n cert-manager --timeout=180s
 
 # Wait for external IP
 echo "Waiting for external IP..."
@@ -43,11 +55,12 @@ EXTERNAL_IP=$(kubectl get svc -n ingress-nginx ingress-nginx-controller \
 echo ""
 echo "✅ Cluster Ready!"
 echo "External IP: $EXTERNAL_IP"
-echo "Access: http://app.$EXTERNAL_IP.sslip.io"
+echo "Access: https://app.$EXTERNAL_IP.sslip.io"
 echo ""
 echo "Next steps:"
 echo "1. Add GitHub Secrets:"
 echo "   - DOCKER_PASSWORD"
 echo "   - OPENROUTER_API_KEY"
+echo "   - LETSENCRYPT_EMAIL"
 echo "2. If you are using a different project or repo, update .github/workflows/deploy.yml"
 echo "3. Push to GitHub to trigger deployment"

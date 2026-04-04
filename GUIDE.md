@@ -258,6 +258,16 @@ Value: sk-or-v1-xxxxxxxxxxxxxxxx
 5. Copy the key (looks like: sk-or-v1-...)
 6. Paste into GitHub Secret
 
+**Secret 3: LETSENCRYPT_EMAIL** ⭐ (required for valid HTTPS certificate)
+```
+Name: LETSENCRYPT_EMAIL
+Value: your-email@example.com
+```
+**Why this is needed:**
+1. cert-manager uses this email when requesting the Let's Encrypt certificate
+2. The deployed app will then get a browser-trusted TLS certificate for `app.{IP}.sslip.io`
+3. Without it, HTTPS falls back to the ingress controller's default self-signed cert and browsers show a warning
+
 This repo's workflow already contains the configured values for:
 - Docker Hub username
 - GCP project ID
@@ -308,6 +318,16 @@ Verify:
 ```bash
 grep "sslip.io" k8s/app.yaml
 # Should show: app.34.123.45.67.sslip.io
+```
+
+### 6.3 Update Let's Encrypt Email For Manual `kubectl` Deploys
+
+If you are deploying manually instead of using GitHub Actions, replace the placeholder in [cert-manager-clusterissuer.yaml](/Users/macbook/Documents/GitHub/AI_Powered_Mental_Health_Assistent/k8s/cert-manager-clusterissuer.yaml):
+
+```bash
+sed -i '' 's/PLACEHOLDER_LETSENCRYPT_EMAIL/your-email@example.com/g' k8s/cert-manager-clusterissuer.yaml
+kubectl apply -f k8s/cert-manager-clusterissuer.yaml
+kubectl apply -f k8s/app.yaml
 ```
 
 ---
@@ -378,8 +398,8 @@ https://app.34.123.45.67.sslip.io
 
 ### 8.2 Open in Browser
 1. Open: `https://app.34.123.45.67.sslip.io`
-2. Accept SSL warning (Let's Encrypt certificate is being issued)
-3. You should see your Angular frontend!
+2. Wait 1-5 minutes for cert-manager to finish the initial Let's Encrypt HTTP-01 challenge
+3. Refresh the page and you should see your Angular frontend without a browser warning
 
 ### 8.3 Test Backend API
 1. Open: `https://app.34.123.45.67.sslip.io/api/docs`
@@ -512,8 +532,9 @@ kubectl rollout restart deployment/backend
 # Check ingress IP
 kubectl get ingress
 
-# If no IP, wait 2-3 minutes (certificate issuing)
-# Certificates take time!
+# If no IP, wait 2-3 minutes for the load balancer
+# If HTTPS still shows a warning, wait a few more minutes for cert-manager
+# to finish issuing the Let's Encrypt certificate
 ```
 
 ### Issue 3: Docker Images Failed to Push
@@ -595,6 +616,7 @@ gcloud container clusters delete mental-health-cluster \
 | `docker/Dockerfile.backend` | FastAPI container recipe |
 | `docker/Dockerfile.frontend` | Angular container recipe |
 | `k8s/app.yaml` | Cloud deployment config (UPDATE THIS!) |
+| `k8s/cert-manager-clusterissuer.yaml` | Let's Encrypt issuer used by cert-manager |
 | `setup.sh` | Creates GKE cluster |
 | `.github/workflows/deploy.yml` | Auto-deployment on push |
 
@@ -642,6 +664,7 @@ Your Application (GKE Cluster)
 |--------|---------|---------|
 | `DOCKER_PASSWORD` | GitHub Actions | Password/token for Docker Hub |
 | `OPENROUTER_API_KEY` | Backend container | LLM API calls for chatbot responses |
+| `LETSENCRYPT_EMAIL` | cert-manager / GitHub Actions | Email used for Let's Encrypt certificate registration |
 | `DOCKER_USERNAME` | Workflow env | Docker Hub namespace used for image tags |
 | `GCP_PROJECT` | Workflow env | Google Cloud project used for deployment |
 | `WIF_PROVIDER` | Workflow env | Keyless GitHub Actions to Google Cloud authentication |
@@ -665,7 +688,8 @@ Your Application (GKE Cluster)
 ✅ **After deploying:**
 - Check GitHub Actions workflow succeeds
 - All pods show "Running"
-- Wait 2-5 minutes for SSL certificate
+- Confirm `LETSENCRYPT_EMAIL` secret is set
+- Wait 2-5 minutes for the first SSL certificate issuance
 - Test frontend and backend access
 
 ✅ **Going forward:**
@@ -734,7 +758,7 @@ gcloud container clusters delete mental-health-cluster --region us-central1  # D
 - [ ] APIs enabled on GCP
 - [ ] GKE cluster created (./setup.sh)
 - [ ] OpenRouter API key obtained (https://openrouter.ai/)
-- [ ] GitHub secrets added (6 of them: Docker username/password, GCP project, OpenRouter API key, WIF)
+- [ ] GitHub secrets added, including `DOCKER_PASSWORD`, `OPENROUTER_API_KEY`, and `LETSENCRYPT_EMAIL`
 - [ ] k8s/app.yaml updated (username and IP)
 - [ ] Pushed to GitHub
 - [ ] GitHub Actions workflow passed
@@ -754,5 +778,5 @@ gcloud container clusters delete mental-health-cluster --region us-central1  # D
 1. **Check logs**: `kubectl logs -f deployment/backend`
 2. **Describe pod**: `kubectl describe pod pod-name`
 3. **Check secrets**: Verify GitHub Secrets are correct
-4. **Wait for certificate**: SSL takes 2-5 minutes
+4. **Wait for certificate**: the first Let's Encrypt issuance usually takes 2-5 minutes
 5. **Check syntax**: Verify k8s/app.yaml has your username and IP
