@@ -7,7 +7,7 @@
     </div>
 
     <!-- KPI Top bar -->
-    <div class="kpi-banner">
+    <div class="kpi-banner" *ngIf="!isLoading()">
       <div class="kpi-card glass-panel">
         <div class="kpi-icon">⭐</div>
         <div class="kpi-info">
@@ -18,7 +18,12 @@
     </div>
   </div>
 
-  <div class="charts-grid">
+  <div class="loading-state" *ngIf="isLoading()">
+    <div class="loading-spinner"></div>
+    <p>Loading analytics data...</p>
+  </div>
+
+  <div class="charts-grid" *ngIf="!isLoading()">
 
     <!-- Row 1 -->
     <div class="chart-card glass-panel">

@@ -296,5 +296,6 @@
 
   .nav-links {
     margin-left: auto;
+    margin-right: 24px;
   }
 }

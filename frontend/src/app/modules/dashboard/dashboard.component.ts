@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
 import { getApiUrl } from '../../core/config/api-url';
+import { forkJoin } from 'rxjs';
 
 Chart.register(...registerables);
 
@@ -19,6 +20,7 @@ export class DashboardComponent implements AfterViewInit {
   trendData = signal<Record<string, number>>({});
   effectivenessScore = signal<number>(0);
   stressAcademicData = signal<any[]>([]);
+  isLoading = signal<boolean>(true);
   private apiUrl = getApiUrl();
 
   constructor(private http: HttpClient) {}
@@ -28,30 +30,36 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   loadData() {
-    this.http.get<any>(`${this.apiUrl}/analytics/emotions`)
-      .subscribe(data => {
-        this.emotionData.set(data);
-        this.createEmotionChart(data);
-      });
+    forkJoin({
+      emotions: this.http.get<any>(`${this.apiUrl}/analytics/emotions`),
+      trend: this.http.get<any>(`${this.apiUrl}/analytics/trend`),
+      effectiveness: this.http.get<any>(`${this.apiUrl}/analytics/effectiveness`),
+      stressAcademic: this.http.get<any[]>(`${this.apiUrl}/analytics/stress_academic`)
+    }).subscribe({
+      next: (data) => {
+        this.isLoading.set(false);
 
-    this.http.get<any>(`${this.apiUrl}/analytics/trend`)
-      .subscribe(data => {
-        this.trendData.set(data);
-        this.createTrendChart(data);
-      });
+        // Allow Angular to render the hidden elements before initializing charts
+        setTimeout(() => {
+          this.emotionData.set(data.emotions);
+          this.createEmotionChart(data.emotions);
 
-    this.http.get<any>(`${this.apiUrl}/analytics/effectiveness`)
-      .subscribe(data => {
-        this.effectivenessScore.set(data.score);
-      });
+          this.trendData.set(data.trend);
+          this.createTrendChart(data.trend);
 
-    this.http.get<any[]>(`${this.apiUrl}/analytics/stress_academic`)
-      .subscribe(data => {
-        this.stressAcademicData.set(data);
-        if(data && data.length > 0) {
-           this.createStressChart(data);
-        }
-      });
+          this.effectivenessScore.set(data.effectiveness?.score || 0);
+
+          this.stressAcademicData.set(data.stressAcademic || []);
+          if(data.stressAcademic && data.stressAcademic.length > 0) {
+             this.createStressChart(data.stressAcademic);
+          }
+        }, 0);
+      },
+      error: (err) => {
+        console.error('Error loading analytics', err);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   createEmotionChart(data: any) {
