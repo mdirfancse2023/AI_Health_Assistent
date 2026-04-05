@@ -124,6 +124,7 @@
   .top-row {
     flex-direction: column;
     align-items: flex-start;
+    margin-bottom: 16px;
   }
 
   .header-section {
@@ -140,9 +141,10 @@
 
   .kpi-banner {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
     gap: 12px;
-    padding-bottom: 8px;
+    padding-bottom: 0;
+    width: 100%;
   }
 
   .kpi-card {
@@ -197,7 +199,8 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 0;
+    width: 100%;
   }
 
   .kpi-card {
