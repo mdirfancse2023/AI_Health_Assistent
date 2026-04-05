@@ -206,3 +206,30 @@ spec:
             name: backend
             port:
               number: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-redirect-ingress
+  annotations:
+    acme.cert-manager.io/http01-ingress-class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://health.136.115.35.202.sslip.io$request_uri"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - app.136.115.35.202.sslip.io
+    secretName: app-136-115-35-202-sslip-io-tls
+  rules:
+  - host: app.136.115.35.202.sslip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
