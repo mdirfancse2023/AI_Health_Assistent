@@ -8,8 +8,9 @@
 }
 
 .top-row {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
   align-items: center;
   margin-bottom: 24px;
 }
@@ -41,8 +42,7 @@
 .kpi-banner {
   margin-bottom: 0;
   display: flex;
-  justify-content: flex-end;
-  overflow-x: visible;
+  width: 100%;
 }
 
 .kpi-card {
@@ -51,7 +51,7 @@
   padding: 10px 20px;
   gap: 16px;
   min-width: 250px;
-  width: auto;
+  width: 100%;
 }
 
 .kpi-icon {
@@ -122,6 +122,7 @@
   }
 
   .top-row {
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 16px;
