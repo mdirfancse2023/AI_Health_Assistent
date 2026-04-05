@@ -25,12 +25,11 @@ app = FastAPI(title="AI Mental Health Assistant", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost",
-        "http://localhost:80",
         "http://localhost:4200",
-        "http://app.34.30.233.97.sslip.io",
-        "https://app.34.30.233.97.sslip.io",
-        "*"  # Fallback for any other origins
+        "http://localhost:8000",
+        "http://health.34.30.233.97.sslip.io",
+        "https://health.34.30.233.97.sslip.io",
+        "https://capstone-mental-health.web.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],

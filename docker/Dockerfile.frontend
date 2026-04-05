@@ -18,4 +18,4 @@ COPY --from=builder /build/dist/frontend ./dist
 
 EXPOSE 80
 
-CMD ["sh", "-lc", "node -e 'const fs=require(\"fs\"); const dir=\"dist/browser\"; const file=fs.readdirSync(dir).find((name)=>/^main-.*\\.js$/.test(name)); if (file) { const path=dir+\"/\"+file; const before=\"process.env.NG_APP_API_URL||\\\"http://app.34.30.233.97.sslip.io/api\\\"\"; const after=\"\\\"/api\\\"\"; const source=fs.readFileSync(path, \"utf8\"); fs.writeFileSync(path, source.split(before).join(after)); }' && exec http-server dist/browser -p 80 --gzip -c-1 --proxy http://localhost:80?"]
+CMD ["sh", "-lc", "node -e 'const fs=require(\"fs\"); const dir=\"dist/browser\"; const file=fs.readdirSync(dir).find((name)=>/^main-.*\\.js$/.test(name)); if (file) { const path=dir+\"/\"+file; const before=\"process.env.NG_APP_API_URL||\\\"http://health.34.30.233.97.sslip.io/api\\\"\"; const after=\"\\\"/api\\\"\"; const source=fs.readFileSync(path, \"utf8\"); fs.writeFileSync(path, source.split(before).join(after)); }' && exec http-server dist/browser -p 80 --gzip -c-1 --proxy http://localhost:80?"]

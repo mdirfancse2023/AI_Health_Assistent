@@ -55,7 +55,7 @@ EXTERNAL_IP=$(kubectl get svc -n ingress-nginx ingress-nginx-controller \
 echo ""
 echo "✅ Cluster Ready!"
 echo "External IP: $EXTERNAL_IP"
-echo "Access: https://app.$EXTERNAL_IP.sslip.io"
+echo "Access: https://health.$EXTERNAL_IP.sslip.io"
 echo ""
 echo "Next steps:"
 echo "1. Add GitHub Secrets:"

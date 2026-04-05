@@ -16,7 +16,7 @@ An intelligent, AI-driven mental health assistant designed to support students b
 Current deployed URL:
 
 ```text
-https://app.136.115.35.202.sslip.io/
+https://health.136.115.35.202.sslip.io/
 ```
 
 The complete GKE setup and deployment flow is documented in [GUIDE.md](GUIDE.md).

@@ -23,7 +23,7 @@
 4. **Step 6**: Update k8s/app.yaml with new cluster IP (2 min)
 5. **Step 7**: Deploy via git push (5 min)
 
-**Result**: Mental Health Assistant running at `https://app.{NEW_IP}.sslip.io`
+**Result**: Mental Health Assistant running at `https://health.{NEW_IP}.sslip.io`
 
 👉 **Start at Step 1 below** (skip 2 & 3)
 
@@ -211,7 +211,7 @@ You'll see:
 ```
 ✅ Cluster Ready!
 External IP: 34.123.45.67
-Access: https://app.34.123.45.67.sslip.io
+Access: https://health.34.123.45.67.sslip.io
 ```
 
 **Copy the External IP - you need it for Step 6!**
@@ -265,7 +265,7 @@ Value: your-email@example.com
 ```
 **Why this is needed:**
 1. cert-manager uses this email when requesting the Let's Encrypt certificate
-2. The deployed app will then get a browser-trusted TLS certificate for `app.{IP}.sslip.io`
+2. The deployed app will then get a browser-trusted TLS certificate for `health.{IP}.sslip.io`
 3. Without it, HTTPS falls back to the ingress controller's default self-signed cert and browsers show a warning
 
 This repo's workflow already contains the configured values for:
@@ -317,7 +317,7 @@ sed -i '' 's/CLUSTER_IP/34.123.45.67/g' k8s/app.yaml
 Verify:
 ```bash
 grep "sslip.io" k8s/app.yaml
-# Should show: app.34.123.45.67.sslip.io
+# Should show: health.34.123.45.67.sslip.io
 ```
 
 ### 6.3 Update Let's Encrypt Email For Manual `kubectl` Deploys
@@ -392,17 +392,17 @@ kubectl get pods
 
 ### 8.1 Get URL
 ```
-https://app.34.123.45.67.sslip.io
+https://health.34.123.45.67.sslip.io
 ```
 (Replace 34.123.45.67 with your External IP from Step 4)
 
 ### 8.2 Open in Browser
-1. Open: `https://app.34.123.45.67.sslip.io`
+1. Open: `https://health.34.123.45.67.sslip.io`
 2. Wait 1-5 minutes for cert-manager to finish the initial Let's Encrypt HTTP-01 challenge
 3. Refresh the page and you should see your Angular frontend without a browser warning
 
 ### 8.3 Test Backend API
-1. Open: `https://app.34.123.45.67.sslip.io/api/docs`
+1. Open: `https://health.34.123.45.67.sslip.io/api/docs`
 2. You should see Swagger UI
 3. Try some endpoints
 
@@ -763,7 +763,7 @@ gcloud container clusters delete mental-health-cluster --region us-central1  # D
 - [ ] Pushed to GitHub
 - [ ] GitHub Actions workflow passed
 - [ ] All pods running: `kubectl get pods`
-- [ ] Application accessible: `https://app.{IP}.sslip.io`
+- [ ] Application accessible: `https://health.{IP}.sslip.io`
 - [ ] Database connection works
 - [ ] Backend API responds
 - [ ] Chat/AI features work
