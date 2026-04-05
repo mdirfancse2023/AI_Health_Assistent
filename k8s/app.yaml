@@ -215,7 +215,7 @@ metadata:
   annotations:
     acme.cert-manager.io/http01-ingress-class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/permanent-redirect: "https://health.136.115.35.202.sslip.io$request_uri"
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://health.136.115.35.202.sslip.io"
 spec:
   ingressClassName: nginx
   tls:
