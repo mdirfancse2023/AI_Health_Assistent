@@ -5,3 +5,8 @@ sqlalchemy
 psycopg2-binary
 python-dotenv
 requests
+transformers
+torch
+numpy
+scikit-learn
+markdown

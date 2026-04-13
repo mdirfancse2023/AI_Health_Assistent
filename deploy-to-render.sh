@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo "🚀 Deploying AI Mental Health Assistant to Render"
+
+echo "1. Make sure you have:"
+echo "   - Render account (https://render.com)"
+echo "   - GitHub repository with this code"
+echo "   - OpenRouter API key"
+
+echo ""
+echo "2. Steps to deploy:"
+echo "   a. Go to https://dashboard.render.com"
+echo "   b. Click 'New +' → 'Blueprint'"
+echo "   c. Connect your GitHub account"
+echo "   d. Select this repository"
+echo "   e. Click 'Deploy Blueprint'"
+echo "   f. Set environment variables:"
+echo "      - OPENROUTER_API_KEY: Your OpenRouter API key"
+echo "      - AUTH_SECRET_KEY: Generate with: openssl rand -base64 32"
+echo ""
+echo "3. Wait for deployment to complete (5-10 minutes)"
+echo "4. Your app will be available at:"
+echo "   - Frontend: https://mental-health-frontend.onrender.com"
+echo "   - Backend: https://mental-health-backend.onrender.com"
+echo ""
+echo "✅ Done!"
