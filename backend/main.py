@@ -1,6 +1,8 @@
 import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -42,6 +44,9 @@ app.include_router(chat_router, prefix="/api")
 app.include_router(analytics_router)
 app.include_router(analytics_router, prefix="/api")
 
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 @app.get("/")
 def home():
-    return {"message": "AI Mental Health Assistant is running 🚀"}
+    return FileResponse("static/index.html")
