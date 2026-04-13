@@ -37,6 +37,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# API routes (must come before static mount)
 app.include_router(auth_router)
 app.include_router(auth_router, prefix="/api")
 app.include_router(chat_router)
@@ -49,4 +50,12 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 def home():
+    return FileResponse("static/index.html")
+
+# Catch-all route for Angular SPA routing
+@app.get("/{path:path}")
+def catch_all(path: str):
+    # Don't catch API routes or static files
+    if path.startswith("api/") or path.startswith("static/"):
+        return {"error": "Not found"}
     return FileResponse("static/index.html")
