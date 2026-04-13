@@ -45,8 +45,18 @@ app.include_router(chat_router, prefix="/api")
 app.include_router(analytics_router)
 app.include_router(analytics_router, prefix="/api")
 
-# Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Serve individual static files from root
+@app.get("/main-AYFNXW25.js")
+def serve_main_js():
+    return FileResponse("static/main-AYFNXW25.js", media_type="application/javascript")
+
+@app.get("/styles-XZBEY575.css")
+def serve_styles_css():
+    return FileResponse("static/styles-XZBEY575.css", media_type="text/css")
+
+@app.get("/favicon.ico")
+def serve_favicon():
+    return FileResponse("static/favicon.ico", media_type="image/x-icon")
 
 @app.get("/")
 def home():
@@ -55,7 +65,7 @@ def home():
 # Catch-all route for Angular SPA routing
 @app.get("/{path:path}")
 def catch_all(path: str):
-    # Don't catch API routes or static files
-    if path.startswith("api/") or path.startswith("static/"):
+    # Don't catch API routes
+    if path.startswith("api/"):
         return {"error": "Not found"}
     return FileResponse("static/index.html")
