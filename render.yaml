@@ -15,15 +15,12 @@ services:
       - key: PYTHONUNBUFFERED
         value: "1"
 
-  - type: static
+  - type: web
     name: mental-health-frontend
-    buildCommand: cd frontend && npm install && npm run build
-    publish: frontend/dist/frontend/browser
-    headers:
-      - path: /*
-        name: Cache-Control
-        value: public, max-age=3600
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npx serve -s dist/browser -p $PORT
+    envVars:
+      - key: NG_APP_API_URL
+        value: https://mental-health-backend.onrender.com/api
