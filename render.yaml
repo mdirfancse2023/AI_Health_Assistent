@@ -27,8 +27,6 @@ services:
       - key: NG_APP_API_URL
         value: https://mental-health-backend.onrender.com/api
 
-  - type: pserv
-    name: mental-health-db
-    ipAllowList: []
+databases:
+  - name: mental-health-db
     plan: free
-    postgresVersion: "15"
