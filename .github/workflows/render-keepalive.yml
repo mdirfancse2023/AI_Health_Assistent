@@ -1,0 +1,18 @@
+name: Render Keepalive Ping
+
+on:
+  schedule:
+    - cron: '*/14 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  keepalive:
+    name: Ping Render App Every 14 Minutes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run keepalive request
+        run: |
+          RENDER_URL="https://mental-health-backend.onrender.com"
+          echo "Pinging Render URL: $RENDER_URL"
+          curl -fsS -o /dev/null -w "Render keepalive status: %{http_code}\n" "$RENDER_URL"
