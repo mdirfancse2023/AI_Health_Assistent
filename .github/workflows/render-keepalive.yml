@@ -13,6 +13,6 @@ jobs:
     steps:
       - name: Run keepalive request
         run: |
-          RENDER_URL="https://mental-health-backend.onrender.com"
+          RENDER_URL="https://mental-health-app-c6g1.onrender.com"
           echo "Pinging Render URL: $RENDER_URL"
           curl -fsS -o /dev/null -w "Render keepalive status: %{http_code}\n" "$RENDER_URL"
