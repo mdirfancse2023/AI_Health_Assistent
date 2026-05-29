@@ -4,6 +4,15 @@
 
 # Azure Container Apps terminates TLS and forwards HTTP to :80
 :80 {
+    # Handle healthai.virtualgyans.tech: serve the mental health app at root
+    @healthai host healthai.virtualgyans.tech
+    handle @healthai {
+        reverse_proxy https://ai-mental-health.blackocean-872335af.centralindia.azurecontainerapps.io {
+            header_up Host ai-mental-health.blackocean-872335af.centralindia.azurecontainerapps.io
+        }
+    }
+
+    # Handle virtualgyans.tech/aimentalhealth
     redir /aimentalhealth /aimentalhealth/ 308
 
     @aimentalhealth path /aimentalhealth /aimentalhealth/*
@@ -13,6 +22,7 @@
         }
     }
 
+    # Handle virtualgyans.tech main site
     handle {
         root * /usr/share/caddy
         encode gzip
