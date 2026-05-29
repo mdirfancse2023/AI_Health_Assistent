@@ -1,6 +1,7 @@
-FROM myportfolioregistry.azurecr.io/myportfolio:1bdb68e6 AS portfolio
+FROM myportfolioregistry.azurecr.io/myportfolio:1bdb68e AS portfolio
 
 FROM caddy:2.10-alpine
 
 COPY --from=portfolio /usr/share/caddy /usr/share/caddy
 COPY docker/Caddyfile.myportfolio /etc/caddy/Caddyfile
+# Added healthai.virtualgyans.tech support
