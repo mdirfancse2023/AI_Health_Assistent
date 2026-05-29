@@ -1,4 +1,4 @@
-FROM myportfolioregistry.azurecr.io/myportfolio:1bdb68e AS portfolio
+FROM myportfolioregistry.azurecr.io/myportfolio:latest AS portfolio
 
 FROM caddy:2.10-alpine
 
