@@ -10,7 +10,7 @@ export const authGuard: CanActivateFn = (_route, state) => {
     return true;
   }
 
-  return router.createUrlTree(['/auth'], {
+  return router.createUrlTree(['auth'], {
     queryParams: {
       redirectTo: state.url || '/chat'
     }
@@ -25,5 +25,5 @@ export const guestGuard: CanActivateFn = () => {
     return true;
   }
 
-  return router.createUrlTree(['/chat']);
+  return router.createUrlTree(['chat']);
 };

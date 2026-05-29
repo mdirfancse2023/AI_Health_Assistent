@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🏗️  Building AI Mental Health Assistant for Render"
+echo "🏗️  Building AI Mental Health Assistant"
 
 # Build frontend
 echo "Building frontend..."

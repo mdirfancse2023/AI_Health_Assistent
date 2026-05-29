@@ -1,7 +1,6 @@
 import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,6 +13,8 @@ from db.database import Base, engine, wait_for_database
 
 from routes.analytics_routes import router as analytics_router
 
+APP_BASE_PATH = os.getenv("APP_BASE_PATH", "/aimentalhealth").rstrip("/") or ""
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -22,50 +23,56 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="AI Mental Health Assistant", lifespan=lifespan)
+def create_app() -> FastAPI:
+    api = FastAPI(title="AI Mental Health Assistant", lifespan=lifespan)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:4200",
-        "http://localhost:8000",
-        "http://health.34.30.233.97.sslip.io",
-        "https://health.34.30.233.97.sslip.io",
-        "https://capstone-mental-health.web.app"
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-# API routes (must come before static mount)
-app.include_router(auth_router)
-app.include_router(auth_router, prefix="/api")
-app.include_router(chat_router)
-app.include_router(chat_router, prefix="/api")
-app.include_router(analytics_router)
-app.include_router(analytics_router, prefix="/api")
+    api.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "http://localhost:4200",
+            "http://localhost:8000",
+            "http://health.34.30.233.97.sslip.io",
+            "https://health.34.30.233.97.sslip.io",
+            "https://capstone-mental-health.web.app",
+            "https://ai-mental-health.blackocean-872335af.centralindia.azurecontainerapps.io",
+            "https://virtualgyans.tech",
+            "https://www.virtualgyans.tech",
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
-# Serve individual static files from root
-@app.get("/main-AYFNXW25.js")
-def serve_main_js():
-    return FileResponse("static/main-AYFNXW25.js", media_type="application/javascript")
+    api.include_router(auth_router)
+    api.include_router(auth_router, prefix="/api")
+    api.include_router(chat_router)
+    api.include_router(chat_router, prefix="/api")
+    api.include_router(analytics_router)
+    api.include_router(analytics_router, prefix="/api")
 
-@app.get("/styles-XZBEY575.css")
-def serve_styles_css():
-    return FileResponse("static/styles-XZBEY575.css", media_type="text/css")
+    @api.get("/{path:path}")
+    def catch_all(path: str):
+        if path.startswith("api/"):
+            return {"error": "Not found"}
 
-@app.get("/favicon.ico")
-def serve_favicon():
-    return FileResponse("static/favicon.ico", media_type="image/x-icon")
+        if not path:
+            return FileResponse("static/index.html")
 
-@app.get("/")
-def home():
-    return FileResponse("static/index.html")
+        static_file_path = os.path.join("static", path)
+        if os.path.isfile(static_file_path):
+            media_type = None
+            if path.endswith(".js"):
+                media_type = "application/javascript"
+            elif path.endswith(".css"):
+                media_type = "text/css"
+            elif path.endswith(".ico"):
+                media_type = "image/x-icon"
+            return FileResponse(static_file_path, media_type=media_type)
 
-# Catch-all route for Angular SPA routing
-@app.get("/{path:path}")
-def catch_all(path: str):
-    # Don't catch API routes
-    if path.startswith("api/"):
-        return {"error": "Not found"}
-    return FileResponse("static/index.html")
+        return FileResponse("static/index.html")
+
+    return api
+
+
+app = FastAPI()
+app.mount(APP_BASE_PATH, create_app())

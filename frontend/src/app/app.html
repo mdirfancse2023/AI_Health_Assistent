@@ -5,7 +5,7 @@
     <div class="nav-links">
       <ng-container *ngIf="authService.isAuthenticated(); else guestLinks">
         <a 
-          routerLink="/chat" 
+          routerLink="chat" 
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
         >
@@ -13,7 +13,7 @@
         </a>
 
         <a 
-          routerLink="/dashboard" 
+          routerLink="dashboard" 
           routerLinkActive="active"
         >
           Dashboard
@@ -23,7 +23,7 @@
 
       <ng-template #guestLinks>
         <a
-          routerLink="/auth"
+          routerLink="auth"
           [queryParams]="{ mode: 'login' }"
           [class.active]="isAuthMode('login')"
         >
@@ -31,7 +31,7 @@
         </a>
 
         <a
-          routerLink="/auth"
+          routerLink="auth"
           [queryParams]="{ mode: 'signup' }"
           [class.active]="isAuthMode('signup')"
         >

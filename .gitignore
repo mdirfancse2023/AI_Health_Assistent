@@ -33,7 +33,7 @@ dist/
 # =========================
 # 🐳 DOCKER
 # =========================
-*.dockerignore
+backend/.azure/
 
 # =========================
 # 🗄️ DATABASE FILES

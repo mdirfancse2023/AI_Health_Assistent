@@ -73,7 +73,9 @@ export class AuthComponent {
       .subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.router.navigateByUrl(this.route.snapshot.queryParamMap.get('redirectTo') || '/chat');
+        const redirectTo = this.route.snapshot.queryParamMap.get('redirectTo') || 'chat';
+        const segments = redirectTo.replace(/^\//, '').split('/').filter(Boolean);
+        this.router.navigate(segments.length ? segments : ['chat']);
       },
       error: (error: unknown) => {
         this.isSubmitting = false;

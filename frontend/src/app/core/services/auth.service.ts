@@ -115,7 +115,7 @@ export class AuthService {
   logout(): void {
     clearStoredSession();
     this.currentUser.set(null);
-    this.router.navigateByUrl('/auth');
+    this.router.navigate(['auth']);
   }
 
   getToken(): string | null {
