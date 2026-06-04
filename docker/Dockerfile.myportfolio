@@ -9,3 +9,6 @@ COPY docker/Caddyfile.myportfolio /etc/caddy/Caddyfile
 RUN sed -i 's|path:"/mdirfanportfolio/\*"|path:"/\*"|g' /usr/share/caddy/assets/index-*.js && \
     sed -i 's|path:"/mdirfanportfolio"|path:"/"|g' /usr/share/caddy/assets/index-*.js
 
+# Force rebuild trigger for new deployment configuration
+
+
