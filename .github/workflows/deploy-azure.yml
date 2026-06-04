@@ -12,6 +12,7 @@ concurrency:
 
 env:
   AZURE_RESOURCE_GROUP: myportfolio-rg
+  AI_RESOURCE_GROUP: ai-mental-health-rg
   ACR_NAME: myportfolioregistry
   ACR_LOGIN_SERVER: myportfolioregistry.azurecr.io
   AI_APP_NAME: ai-mental-health
@@ -92,7 +93,7 @@ jobs:
         run: |
           az containerapp update \
             --name "${{ env.AI_APP_NAME }}" \
-            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+            --resource-group "${{ env.AI_RESOURCE_GROUP }}" \
             --image "${{ env.AI_IMAGE }}:${{ github.sha }}" \
             --set-env-vars \
               APP_BASE_PATH=/aimentalhealth \
@@ -104,7 +105,7 @@ jobs:
         run: |
           FQDN=$(az containerapp show \
             --name "${{ env.AI_APP_NAME }}" \
-            --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+            --resource-group "${{ env.AI_RESOURCE_GROUP }}" \
             --query "properties.configuration.ingress.fqdn" \
             -o tsv)
           echo "Container App URL: https://${FQDN}"

@@ -18,7 +18,18 @@
     handle {
         root * /usr/share/caddy
         encode gzip
-        try_files {path} /index.html
-        file_server
+
+        # Cache hashed static assets indefinitely
+        @static {
+            file
+            path *.js *.css *.png *.jpg *.jpeg *.gif *.svg *.woff *.woff2 *.ico
+        }
+        header @static Cache-Control "public, max-age=31536000, immutable"
+
+        route {
+            try_files {path} /index.html
+            header /index.html Cache-Control "public, max-age=0, must-revalidate"
+            file_server
+        }
     }
 }
