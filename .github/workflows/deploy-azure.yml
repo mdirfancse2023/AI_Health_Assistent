@@ -97,6 +97,7 @@ jobs:
             --name "${{ env.AI_APP_NAME }}" \
             --resource-group "${{ env.AI_RESOURCE_GROUP }}" \
             --image "${{ env.AI_IMAGE }}:${{ github.sha }}" \
+            --min-replicas 1 \
             --set-env-vars \
               APP_BASE_PATH=/aimentalhealth \
               OPENROUTER_API_KEY="${{ secrets.OPENROUTER_API_KEY }}" \
