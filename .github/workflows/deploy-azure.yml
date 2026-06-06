@@ -13,12 +13,11 @@ concurrency:
 env:
   AZURE_RESOURCE_GROUP: myportfolio-rg
   AI_RESOURCE_GROUP: ai-mental-health-rg
-  ACR_NAME: myportfolioregistry
-  ACR_LOGIN_SERVER: myportfolioregistry.azurecr.io
+  DOCKERHUB_USERNAME: mdirfancse2023
   AI_APP_NAME: ai-mental-health
   PORTFOLIO_APP_NAME: myportfolio
-  AI_IMAGE: myportfolioregistry.azurecr.io/ai-mental-health
-  PORTFOLIO_IMAGE: myportfolioregistry.azurecr.io/myportfolio
+  AI_IMAGE: docker.io/mdirfancse2023/mental-health-backend
+  PORTFOLIO_IMAGE: docker.io/mdirfancse2023/mental-health-frontend
   NODE_VERSION: "20"
 
 permissions:
@@ -70,8 +69,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Log in to Azure Container Registry
-        run: az acr login --name "${{ env.ACR_NAME }}"
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -124,8 +126,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Log in to Azure Container Registry
-        run: az acr login --name "${{ env.ACR_NAME }}"
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
