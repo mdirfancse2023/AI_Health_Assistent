@@ -5,6 +5,12 @@ from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+else:
+    # Fallback to in-memory SQLite to prevent startup crashes when env vars are missing
+    DATABASE_URL = "sqlite:///:memory:"
 
 print("DB URL:", DATABASE_URL)  # optional debug
 
