@@ -67,6 +67,8 @@ def create_app() -> FastAPI:
             "https://virtualgyans.tech",
             "https://www.virtualgyans.tech",
             "https://healthai.virtualgyans.tech",
+            "https://virtualgyans.me",
+            "http://virtualgyans.me",
             "https://mdirfancse2023.github.io",
             "http://mdirfancse2023.github.io",
         ],
