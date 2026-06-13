@@ -11,15 +11,13 @@ An intelligent, AI-driven mental health assistant designed to support students b
 1. **Local full stack**: `docker-compose up`
 2. **Frontend local dev**: `cd frontend && npm install && ng serve`
 3. **Backend local dev**: `cd backend && pip install -r requirements.txt && uvicorn main:app --reload`
-4. **Cloud deployment guide**: See [GUIDE.md](GUIDE.md)
+4. **Deployment Guide**: backend is deployed to Vercel and frontend is deployed to GitHub Pages.
 
 Current deployed URL:
 
 ```text
-https://healthai.virtualgyans.tech/
+https://virtualgyans.me/healthai/
 ```
-
-The complete GKE setup and deployment flow is documented in [GUIDE.md](GUIDE.md).
 
 ---
 
@@ -276,31 +274,22 @@ POST /daily-checkin
 
 ### GitHub Actions Deployment
 
-The repo includes:
+The repository includes:
+* [deploy-gh-pages.yml](.github/workflows/deploy-gh-pages.yml) to automatically compile and publish the Angular frontend to GitHub Pages (`gh-pages` branch) on every push to `main`.
 
-* [deploy.yml](.github/workflows/deploy.yml) for Docker build, push, and GKE deployment
-* Workload Identity Federation for keyless GitHub Actions authentication to Google Cloud
-* Immutable image rollout using `github.sha` tags during deployment
+### Vercel Deployment
 
-Required GitHub secrets:
-
-* `DOCKER_PASSWORD`
-* `OPENROUTER_API_KEY`
+The backend is configured for serverless deployment on Vercel:
+* `backend/vercel.json` maps incoming HTTP routes to `main.py` using the `@vercel/python` builder.
+* Database, OpenRouter, and authentication keys are supplied via Vercel Project Settings environment variables.
 
 ### Qodana
 
-The repo also includes:
-
+The repository also includes:
 * [qodana.yml](.github/workflows/qodana.yml)
 * [qodana.yaml](qodana.yaml)
 
-This setup currently keeps Qodana simple by scanning the Python backend with `qodana-python-community`.
-
-If you want Qodana Cloud dashboard uploads, add the GitHub secret:
-
-* `QODANA_TOKEN`
-
-This must be the Qodana **project token** used for dashboard uploads.
+This scans the Python backend for static analysis. If you want dashboard uploads, set the `QODANA_TOKEN` secret in GitHub.
 
 ---
 
